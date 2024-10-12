@@ -47,6 +47,7 @@ jobs:
   # Deployment job
   deploy:
     needs: builder
+    runs-on: ubuntu-latest
     
     permissions:
       pages: write      # to deploy to Pages
@@ -56,8 +57,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    runs-on: ubuntu-latest
     steps:
+      - name: Copy results to public directory
+        run: cp --recursive --dereference --no-preserve=mode,ownership result public
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
