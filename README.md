@@ -1,6 +1,9 @@
 
 # RATS
 
+## Version
+
+"rats" uses `Unity 6000.0.22f1`
 
 ## Set Up / Initialization
 
