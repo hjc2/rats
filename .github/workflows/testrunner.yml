@@ -39,10 +39,11 @@ jobs:
         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
       with:
         targetPlatform: WebGL
-    - uses: actions/upload-artifact@v4
+        path: build/
+    - uses: actions/upload-pages-artifact@v3
       with:
         name: github-pages
-        path: docs/
+        path: build/
         
   # Deployment job
   deploy:
@@ -58,8 +59,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Copy results to public directory
-        run: cp --recursive --dereference --no-preserve=mode,ownership result public
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
