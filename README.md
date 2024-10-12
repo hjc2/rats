@@ -1,6 +1,11 @@
 
 # RATS
 
+## Version
+
+"rats" uses `Unity 6000.0.22f1`
+
+current CI / CD libs requires our version to be on the game ci host [game.ci/docs/docker/versions/](https://game.ci/docs/docker/versions/)
 
 ## Set Up / Initialization
 

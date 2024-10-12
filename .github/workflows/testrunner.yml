@@ -11,6 +11,14 @@ jobs:
     - name: my-step
       run: echo "Hello World!"
 
+  branch-status:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Extract branch name
+      shell: bash
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      id: extract_branch
+      
   builder:
     runs-on: ubuntu-latest
     steps:
@@ -22,3 +30,8 @@ jobs:
         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
       with:
         targetPlatform: WebGL
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: WebGL
+        path: docs/
