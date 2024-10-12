@@ -2,23 +2,24 @@
 
 name: Build project
 
-on: [push, pull_request]
+# only needs to run on push to master or pull requests to master
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
+  # hello world for testing
   hello-world:
     runs-on: ubuntu-latest
     steps:
     - name: my-step
       run: echo "Hello World!"
 
-  branch-status:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Extract branch name
-      shell: bash
-      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-      id: extract_branch
-      
+  # unity builder
   builder:
     runs-on: ubuntu-latest
     steps:
@@ -38,7 +39,6 @@ jobs:
         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
       with:
         targetPlatform: WebGL
-
     - uses: actions/upload-artifact@v4
       with:
         name: WebGL
