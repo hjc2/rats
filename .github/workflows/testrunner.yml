@@ -30,3 +30,8 @@ jobs:
         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
       with:
         targetPlatform: WebGL
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: WebGL
+        path: docs/
