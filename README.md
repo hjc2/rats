@@ -1,6 +1,7 @@
 
 # RATS
-
+[![Build and Deploy Project](https://github.com/hjc2/rats/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/hjc2/rats/actions/workflows/build-deploy.yml)
+[![Test Build](https://github.com/hjc2/rats/actions/workflows/test-build.yml/badge.svg)](https://github.com/hjc2/rats/actions/workflows/test-build.yml)
 ## Version
 
 "rats" uses `Unity 2022.3.43f1`
