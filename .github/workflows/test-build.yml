@@ -9,7 +9,6 @@ on:
       - published
 
 jobs:
-
   # unity builder
   builder:
     runs-on: ubuntu-latest
