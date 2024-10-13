@@ -32,6 +32,6 @@ current CI / CD libs requires our version to be on the game ci host [game.ci/doc
 
 ## CI / CD
 
-`Test Build` builds the Unity project and reports if it was successful - this runs on all branches & tags
+`Test Build` builds the Unity project and reports if it was successful - this runs on branches, tags, pr's
 
-`Build and Deploy` builds the Unity project and deploys to GitHub sites - this runs only on pushes and pull requests to default branch
+`Build and Deploy` builds the Unity project and deploys to GitHub sites - this should only run on main getting updated.

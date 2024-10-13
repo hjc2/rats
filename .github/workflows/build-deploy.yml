@@ -4,9 +4,9 @@ on: # push / pull_request on master branch
   push: 
     branches:
       - master
-  pull_request:
-    branches:
-      - master
+  # pull_request:
+  #   branches:
+  #     - master
 
 jobs:
   builder:  # unity builder
