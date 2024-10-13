@@ -10,7 +10,7 @@ on:
 
 jobs:
   # unity builder
-  builder:
+  test-builder:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
