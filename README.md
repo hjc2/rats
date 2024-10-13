@@ -28,4 +28,3 @@ current CI / CD libs requires our version to be on the game ci host [game.ci/doc
  ![screenshot](.github/disk.png)
 
 * Select your project folder and and click "Add Project"
-
