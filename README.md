@@ -28,3 +28,9 @@ current CI / CD libs requires our version to be on the game ci host [game.ci/doc
  ![screenshot](.github/disk.png)
 
 * Select your project folder and and click "Add Project"
+
+## CI / CD
+
+`Test Build` builds the Unity project and reports if it was successful - this runs on all branches & tags
+
+`Build and Deploy` builds the Unity project and deploys to GitHub sites - this runs only on pushes and pull requests to default branch
