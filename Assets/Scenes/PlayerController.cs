@@ -5,68 +5,91 @@ using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    private Vector2 movement;
+    public float moveDuration = 0.2f; // Duration of movement between tiles
+    private Vector3Int currentCell;
+    private Vector3Int targetCell;
+    private bool isMoving = false;
     public Tilemap wallTilemap;
+    private float moveTimer = 0f;
+    private Vector3 startPosition;
+    private Vector3 endPosition;
+    private Vector3Int moveDirection = Vector3Int.zero;
 
     private void Start()
     {
         wallTilemap = FindObjectOfType<GameManager>().wallTilemap;
+        currentCell = wallTilemap.WorldToCell(transform.position);
+        targetCell = currentCell;
+        SnapToGridCenter();
     }
 
     private void Update()
     {
-        // Input
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-
-        // Normalize diagonal movement
-        movement = movement.normalized;
-
-        // Movement and collision check
-        Vector3 newPosition = transform.position + (Vector3)movement * moveSpeed * Time.deltaTime;
-        if (!IsCollidingWithWall(newPosition))
+        HandleInput();
+        
+        if (isMoving)
         {
-            transform.position = newPosition;
+            SmoothMove();
         }
-        else
+        else if (moveDirection != Vector3Int.zero)
         {
-            // Try horizontal movement
-            Vector3 horizontalMove = transform.position + new Vector3(movement.x, 0, 0) * moveSpeed * Time.deltaTime;
-            if (!IsCollidingWithWall(horizontalMove))
+            TryMove(moveDirection);
+        }
+    }
+
+    private void HandleInput()
+    {
+        moveDirection = Vector3Int.zero;
+
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            moveDirection.y = 1;
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            moveDirection.y = -1;
+        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            moveDirection.x = -1;
+        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            moveDirection.x = 1;
+    }
+
+    private void TryMove(Vector3Int direction)
+    {
+        Vector3Int newTargetCell = currentCell + direction;
+        if (!wallTilemap.HasTile(newTargetCell))
+        {
+            targetCell = newTargetCell;
+            startPosition = transform.position;
+            endPosition = wallTilemap.GetCellCenterWorld(targetCell);
+            isMoving = true;
+            moveTimer = 0f;
+        }
+    }
+
+    private void SmoothMove()
+    {
+        moveTimer += Time.deltaTime;
+        float t = Mathf.Clamp01(moveTimer / moveDuration);
+        
+        // Use smoothstep for easing
+        t = t * t * (3f - 2f * t);
+        
+        transform.position = Vector3.Lerp(startPosition, endPosition, t);
+
+        if (moveTimer >= moveDuration)
+        {
+            transform.position = endPosition;
+            currentCell = targetCell;
+            isMoving = false;
+            
+            // Immediately try to move again in the held direction
+            if (moveDirection != Vector3Int.zero)
             {
-                transform.position = horizontalMove;
-            }
-            else
-            {
-                // Try vertical movement
-                Vector3 verticalMove = transform.position + new Vector3(0, movement.y, 0) * moveSpeed * Time.deltaTime;
-                if (!IsCollidingWithWall(verticalMove))
-                {
-                    transform.position = verticalMove;
-                }
+                TryMove(moveDirection);
             }
         }
     }
 
-    private bool IsCollidingWithWall(Vector3 position)
+    private void SnapToGridCenter()
     {
-        // Check the four corners of the player
-        Vector3Int[] cellsToCheck = new Vector3Int[]
-        {
-            wallTilemap.WorldToCell(position + new Vector3(0.4f, 0.4f, 0)),
-            wallTilemap.WorldToCell(position + new Vector3(-0.4f, 0.4f, 0)),
-            wallTilemap.WorldToCell(position + new Vector3(0.4f, -0.4f, 0)),
-            wallTilemap.WorldToCell(position + new Vector3(-0.4f, -0.4f, 0))
-        };
-
-        foreach (var cell in cellsToCheck)
-        {
-            if (wallTilemap.HasTile(cell))
-            {
-                return true;
-            }
-        }
-        return false;
+        transform.position = wallTilemap.GetCellCenterWorld(currentCell);
     }
 }

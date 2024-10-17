@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
 
     private void SpawnPlayer()
     {
-        Vector3 spawnPosition = new Vector3(1.5f, 1.5f, 0); // Adjusted to center of the first cell
+        Vector3 spawnPosition = new Vector3(0.75f, 0.75f, 0); // Adjusted to center of the first cell
         Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
     }
 }
