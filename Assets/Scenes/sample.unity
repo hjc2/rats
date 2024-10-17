@@ -975,6 +975,20 @@ MonoBehaviour:
   wallTilemap: {fileID: 914684632}
   wallTile: {fileID: 11400000, guid: 1226337c7146ed940b7b9a5fd5f3bec1, type: 2}
   playerPrefab: {fileID: 9197834051047969607, guid: 7227edb1ecba0764dbc8c9228140c5c6, type: 3}
+  npcPrefab: {fileID: 4499419441672808451, guid: 8ed4cfcfd2706e54596e97471499793d, type: 3}
+  guards:
+  - name: john
+    sprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+    moveSpeed: 1
+    patrolPoints:
+    - {x: 0, y: 0}
+    - {x: 2, y: 2}
+  - name: bob
+    sprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+    moveSpeed: 1
+    patrolPoints:
+    - {x: 0, y: 0}
+    - {x: -2, y: -2}
 --- !u!4 &1502128597
 Transform:
   m_ObjectHideFlags: 0
