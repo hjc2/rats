@@ -9,6 +9,7 @@ using UnityEngine.Tilemaps;
 using System;
 using System.Collections.Generic;
 
+
 [Serializable]
 public class GuardDefinition
 {
@@ -16,6 +17,8 @@ public class GuardDefinition
     public Sprite sprite;
     public float moveSpeed = 2f;
     public List<Vector2Int> patrolPoints = new List<Vector2Int>();
+    public float flashlightLength = 3f;
+    public Color flashlightColor = Color.yellow;
 }
 
 public class GameManager : MonoBehaviour
@@ -23,14 +26,14 @@ public class GameManager : MonoBehaviour
     public Tilemap wallTilemap;
     public TileBase wallTile;
     public GameObject playerPrefab;
-    public GameObject npcPrefab;
+    public GameObject guardPrefab;
     public List<GuardDefinition> guards;
 
     private void Start()
     {
         GenerateMap();
         SpawnPlayer();
-        SpawnNPCs();
+        SpawnGuards();
     }
 
     private void GenerateMap()
@@ -43,7 +46,6 @@ public class GameManager : MonoBehaviour
                 if (x == 0 || x == 9 || y == 0 || y == 9)
                 {
                     // wallTilemap.SetTile(new Vector3Int(x, y, 0), wallTile);
-                    // no actually making 
                 }
             }
         }
@@ -56,7 +58,7 @@ public class GameManager : MonoBehaviour
         Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
     }
 
-    private void SpawnNPCs()
+    private void SpawnGuards()
     {
         foreach (GuardDefinition guard in guards)
         {
@@ -67,9 +69,9 @@ public class GameManager : MonoBehaviour
             }
 
             Vector3 spawnPosition = wallTilemap.GetCellCenterWorld(new Vector3Int(guard.patrolPoints[0].x, guard.patrolPoints[0].y, 0));
-            GameObject npc = Instantiate(npcPrefab, spawnPosition, Quaternion.identity);
-            NPCController npcController = npc.GetComponent<NPCController>();
-            npcController.Initialize(wallTilemap, guard);
+            GameObject guardObject = Instantiate(guardPrefab, spawnPosition, Quaternion.identity);
+            GuardController guardController = guardObject.GetComponent<GuardController>();
+            guardController.Initialize(wallTilemap, guard);
         }
     }
 }
