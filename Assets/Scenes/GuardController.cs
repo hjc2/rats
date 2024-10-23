@@ -6,7 +6,8 @@ public class GuardController : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
     public float moveSpeed = 2f;
-    // public float flashlightLength = 3f;
+    public float flashlightLength = 1f;
+
     private Vector3Int currentCell;
     private Tilemap wallTilemap;
     private List<Vector2Int> patrolPoints;
@@ -14,18 +15,12 @@ public class GuardController : MonoBehaviour
     private Vector3 targetPosition;
     private bool isMoving = false;
 
-    // public float flashlightLength;
-    private GameObject flashlight;
 
     public void Initialize(Tilemap tilemap, GuardDefinition guardDef)
     {
         wallTilemap = tilemap;
         moveSpeed = guardDef.moveSpeed;
         
-        //Debug.Log(GetComponentInChildren<Transform>());
-
-        // flashlight = GetComponentInChildren<GameObject>();
-
         patrolPoints = new List<Vector2Int>(guardDef.patrolPoints);
         currentCell = new Vector3Int(patrolPoints[0].x, patrolPoints[0].y, 0);
         transform.position = wallTilemap.GetCellCenterWorld(currentCell);
@@ -38,6 +33,9 @@ public class GuardController : MonoBehaviour
         name = guardDef.name;
         
         SetNewTargetPosition();
+
+        // Set flashlight length
+        transform.GetChild(0).localScale = new Vector3(1, flashlightLength, 1);
     }
 
     private void Update()
@@ -65,7 +63,7 @@ public class GuardController : MonoBehaviour
         {
             targetPosition = wallTilemap.GetCellCenterWorld(targetCell);
             isMoving = true;
-            UpdateFlashlightRotation(moveDirection);
+            UpdateRotation(moveDirection);
         }
     }
 
@@ -85,10 +83,9 @@ public class GuardController : MonoBehaviour
         }
     }
 
-    private void UpdateFlashlightRotation(Vector3Int direction)
+    private void UpdateRotation(Vector3Int direction)
     {
-        // float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-        // flashlight.transform.rotation = Quaternion.Euler(0, 0, angle);
-
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        transform.rotation = Quaternion.Euler(0, 0, angle - 180);
     }
 }
