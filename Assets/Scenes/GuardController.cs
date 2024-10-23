@@ -6,7 +6,7 @@ public class GuardController : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
     public float moveSpeed = 2f;
-    public float flashlightLength = 1f;
+    public float flashlightLength = 3f;
 
     private Vector3Int currentCell;
     private Tilemap wallTilemap;
@@ -33,9 +33,6 @@ public class GuardController : MonoBehaviour
         name = guardDef.name;
         
         SetNewTargetPosition();
-
-        // Set flashlight length
-        transform.GetChild(0).localScale = new Vector3(1, flashlightLength, 1);
     }
 
     private void Update()
@@ -43,6 +40,13 @@ public class GuardController : MonoBehaviour
         Move();
     }
 
+
+    public void setFlashlightLength(float length)
+    {
+        flashlightLength = length;
+        transform.GetChild(0).localScale = new Vector3(1, flashlightLength, 1);
+    }
+    
     private void SetNewTargetPosition()
     {
         Vector2Int targetPoint = patrolPoints[currentPatrolIndex];
@@ -88,4 +92,5 @@ public class GuardController : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
         transform.rotation = Quaternion.Euler(0, 0, angle - 180);
     }
+
 }

@@ -16,6 +16,7 @@ public class GuardDefinition
     public string name;
     public Sprite sprite;
     public float moveSpeed = 2f;
+    public float flashlightLength = 3f;
     public List<Vector2Int> patrolPoints = new List<Vector2Int>();
 }
 
@@ -52,8 +53,11 @@ public class GameManager : MonoBehaviour
 
             Vector3 spawnPosition = wallTilemap.GetCellCenterWorld(new Vector3Int(guard.patrolPoints[0].x, guard.patrolPoints[0].y, 0));
             GameObject guardObject = Instantiate(guardPrefab, spawnPosition, Quaternion.identity);
+
             GuardController guardController = guardObject.GetComponent<GuardController>();
             guardController.Initialize(wallTilemap, guard);
+            
+            guardController.setFlashlightLength(guard.flashlightLength);
         }
     }
 }
