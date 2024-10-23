@@ -6,23 +6,26 @@ public class GuardController : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
     public float moveSpeed = 2f;
-    public float flashlightLength = 3f;
-    public Color flashlightColor = Color.yellow;
-
+    // public float flashlightLength = 3f;
     private Vector3Int currentCell;
     private Tilemap wallTilemap;
     private List<Vector2Int> patrolPoints;
     private int currentPatrolIndex = 0;
     private Vector3 targetPosition;
     private bool isMoving = false;
+
+    // public float flashlightLength;
     private GameObject flashlight;
 
     public void Initialize(Tilemap tilemap, GuardDefinition guardDef)
     {
         wallTilemap = tilemap;
         moveSpeed = guardDef.moveSpeed;
-        flashlightLength = guardDef.flashlightLength;
-        flashlightColor = guardDef.flashlightColor;
+        
+        //Debug.Log(GetComponentInChildren<Transform>());
+
+        // flashlight = GetComponentInChildren<GameObject>();
+
         patrolPoints = new List<Vector2Int>(guardDef.patrolPoints);
         currentCell = new Vector3Int(patrolPoints[0].x, patrolPoints[0].y, 0);
         transform.position = wallTilemap.GetCellCenterWorld(currentCell);
@@ -34,40 +37,7 @@ public class GuardController : MonoBehaviour
 
         name = guardDef.name;
         
-        CreateFlashlight();
         SetNewTargetPosition();
-    }
-
-    private void CreateFlashlight()
-    {
-        flashlight = new GameObject("Flashlight");
-        flashlight.transform.SetParent(transform);
-        flashlight.transform.localPosition = Vector3.zero;
-
-        MeshFilter meshFilter = flashlight.AddComponent<MeshFilter>();
-        MeshRenderer meshRenderer = flashlight.AddComponent<MeshRenderer>();
-
-        Mesh mesh = new Mesh();
-        meshFilter.mesh = mesh;
-
-        Vector3[] vertices = new Vector3[3];
-        int[] triangles = new int[3];
-
-        vertices[0] = Vector3.zero;
-        vertices[1] = new Vector3(-0.25f, flashlightLength, 0);
-        vertices[2] = new Vector3(0.25f, flashlightLength, 0);
-
-        triangles[0] = 0;
-        triangles[1] = 1;
-        triangles[2] = 2;
-
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-
-        meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        meshRenderer.material.color = flashlightColor;
-
-        flashlight.transform.localPosition = new Vector3(0, 0.5f, 0);
     }
 
     private void Update()
@@ -117,7 +87,8 @@ public class GuardController : MonoBehaviour
 
     private void UpdateFlashlightRotation(Vector3Int direction)
     {
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-        flashlight.transform.rotation = Quaternion.Euler(0, 0, angle);
+        // float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        // flashlight.transform.rotation = Quaternion.Euler(0, 0, angle);
+
     }
 }

@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 startPosition;
     private Vector3 endPosition;
     private Vector3Int moveDirection = Vector3Int.zero;
+    // public BoxCollider boxCollider;
 
     private void Start()
     {
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
         currentCell = wallTilemap.WorldToCell(transform.position);
         targetCell = currentCell;
         SnapToGridCenter();
+
     }
 
     private void Update()
@@ -49,6 +51,11 @@ public class PlayerController : MonoBehaviour
             moveDirection.x = -1;
         else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             moveDirection.x = 1;
+    }
+
+        private void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("YAY");
     }
 
     private void TryMove(Vector3Int direction)

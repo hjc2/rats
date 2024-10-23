@@ -17,8 +17,6 @@ public class GuardDefinition
     public Sprite sprite;
     public float moveSpeed = 2f;
     public List<Vector2Int> patrolPoints = new List<Vector2Int>();
-    public float flashlightLength = 3f;
-    public Color flashlightColor = Color.yellow;
 }
 
 public class GameManager : MonoBehaviour
@@ -31,24 +29,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        GenerateMap();
         SpawnPlayer();
         SpawnGuards();
-    }
-
-    private void GenerateMap()
-    {
-        // Create a simple 10x10 room outline
-        for (int x = 0; x < 10; x++)
-        {
-            for (int y = 0; y < 10; y++)
-            {
-                if (x == 0 || x == 9 || y == 0 || y == 9)
-                {
-                    // wallTilemap.SetTile(new Vector3Int(x, y, 0), wallTile);
-                }
-            }
-        }
     }
 
     private void SpawnPlayer()
