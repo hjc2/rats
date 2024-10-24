@@ -32,6 +32,19 @@ public class GameManager : MonoBehaviour
         // add the already made guards to the list
         foreach (GuardController guard in FindObjectsOfType<GuardController>())
         {
+            // Get the guard's current position in grid coordinates
+            Vector3Int guardPos = wallTilemap.WorldToCell(guard.transform.position);
+            Vector2Int guardGridPos = new Vector2Int(guardPos.x, guardPos.y);
+
+            // Create a new list for transformed patrol points
+            List<Vector2Int> transformedPatrolPoints = new List<Vector2Int>();
+
+            // Store all patrol points as offsets from the guard's position
+            foreach (Vector2Int patrolPoint in guard.patrolPoints)
+            {
+                Vector2Int offset = patrolPoint + guardGridPos;
+                transformedPatrolPoints.Add(offset);
+            }
 
             guards.Add(new GuardDefinition
             {
@@ -39,17 +52,18 @@ public class GameManager : MonoBehaviour
                 sprite = guard.spriteRenderer.sprite,
                 moveSpeed = guard.moveSpeed,
                 flashlightLength = guard.flashlightLength,
-                patrolPoints = new List<Vector2Int>(guard.patrolPoints)
+                patrolPoints = transformedPatrolPoints,
             });
 
             // terrible solution but it works
             guard.gameObject.SetActive(false);
 
-            Debug.Log("Guard added to list");
+            Debug.Log($"Guard added to list at position {guardGridPos}");
         }
 
         SpawnGuards();
     }
+
 
     private void SpawnPlayer()
     {
@@ -73,6 +87,7 @@ public class GameManager : MonoBehaviour
             GuardController guardController = guardObject.GetComponent<GuardController>();
             guardController.Initialize(wallTilemap, guard);
             
+            // guardController.setFlashlightLength(5f);
             guardController.setFlashlightLength(guard.flashlightLength);
         }
     }

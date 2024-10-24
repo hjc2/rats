@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     private Vector3Int currentCell;
     private Vector3Int targetCell;
     private bool isMoving = false;
-    public Tilemap wallTilemap;
+    private Tilemap wallTilemap;
     private float moveTimer = 0f;
     private Vector3 startPosition;
     private Vector3 endPosition;
