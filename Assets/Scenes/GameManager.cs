@@ -20,19 +20,40 @@ public class GameManager : MonoBehaviour
     public Tilemap wallTilemap;
     public TileBase wallTile;
     public GameObject playerPrefab;
+    public Vector3Int playerSpawnCell;
     public GameObject guardPrefab;
     public List<GuardDefinition> guards;
 
     private void Start()
     {
         SpawnPlayer();
+        // SpawnGuards();
+
+        // add the already made guards to the list
+        foreach (GuardController guard in FindObjectsOfType<GuardController>())
+        {
+
+            guards.Add(new GuardDefinition
+            {
+                name = guard.name,
+                sprite = guard.spriteRenderer.sprite,
+                moveSpeed = guard.moveSpeed,
+                flashlightLength = guard.flashlightLength,
+                patrolPoints = new List<Vector2Int>(guard.patrolPoints)
+            });
+
+            // terrible solution but it works
+            guard.gameObject.SetActive(false);
+
+            Debug.Log("Guard added to list");
+        }
+
         SpawnGuards();
     }
 
     private void SpawnPlayer()
     {
-        Vector3Int spawnCell = new Vector3Int(1, 1, 0);
-        Vector3 spawnPosition = wallTilemap.GetCellCenterWorld(spawnCell);
+        Vector3 spawnPosition = wallTilemap.GetCellCenterWorld(playerSpawnCell);
         Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
     }
 

@@ -10,7 +10,7 @@ public class GuardController : MonoBehaviour
 
     private Vector3Int currentCell;
     private Tilemap wallTilemap;
-    private List<Vector2Int> patrolPoints;
+    public List<Vector2Int> patrolPoints;
     private int currentPatrolIndex = 0;
     private Vector3 targetPosition;
     private bool isMoving = false;
