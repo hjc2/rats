@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 endPosition;
     private Vector3Int moveDirection = Vector3Int.zero;
     // public BoxCollider boxCollider;
+    private Vector3 resetPosition;
 
     private void Start()
     {
@@ -22,7 +23,7 @@ public class PlayerController : MonoBehaviour
         currentCell = wallTilemap.WorldToCell(transform.position);
         targetCell = currentCell;
         SnapToGridCenter();
-
+        resetPosition = transform.position;
     }
 
     private void Update()
@@ -55,7 +56,15 @@ public class PlayerController : MonoBehaviour
 
         private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("YAY");
+        Debug.Log("Player Spotted");
+        // resetPosition = transform.position;
+        transform.position = resetPosition;
+        currentCell = wallTilemap.WorldToCell(transform.position);
+        targetCell = currentCell;
+        startPosition = transform.position;
+        endPosition = wallTilemap.GetCellCenterWorld(targetCell);
+        // SnapToGridCenter();
+
     }
 
     private void TryMove(Vector3Int direction)
