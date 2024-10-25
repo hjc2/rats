@@ -7,6 +7,7 @@ public class GuardController : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public float moveSpeed = 2f;
     public float flashlightLength = 3f;
+    public float rotationSpeed = 180f; // Degrees per second for rotation
 
     private Vector3Int currentCell;
     private Tilemap wallTilemap;
@@ -15,7 +16,8 @@ public class GuardController : MonoBehaviour
     private Vector3 targetPosition;
     private bool isMoving = false;
     private Transform flashlightTransform;
-    private Vector2Int currentDirection = Vector2Int.right; // Store current direction
+    private Vector2Int currentDirection = Vector2Int.right;
+    private Quaternion targetRotation;
 
     public void Initialize(Tilemap tilemap, GuardDefinition guardDef)
     {
@@ -41,19 +43,29 @@ public class GuardController : MonoBehaviour
     private void Update()
     {
         Move();
-        UpdateFlashlightLength();
+        UpdateSmoothRotation();
+        UpdateFlashlightLength(); // Moved after rotation update
     }
 
     private void UpdateFlashlightLength()
     {
-        // Start from current position
+        // Calculate the actual facing direction based on current rotation
+        float currentAngle = transform.rotation.eulerAngles.z + 270; // Adjust for the -90 offset
+        float radians = currentAngle * Mathf.Deg2Rad;
+        Vector2 facingDirection = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
+        
         Vector3Int currentPos = wallTilemap.WorldToCell(transform.position);
         float length = flashlightLength;
 
-        // Check each cell in the current direction until we hit a wall or reach max length
+        // Check for walls along the actual facing direction
         for (int i = 1; i <= Mathf.CeilToInt(flashlightLength); i++)
         {
-            Vector3Int checkPos = currentPos + new Vector3Int(currentDirection.x * i, currentDirection.y * i, 0);
+            Vector3Int checkPos = currentPos + new Vector3Int(
+                Mathf.RoundToInt(facingDirection.x * i),
+                Mathf.RoundToInt(facingDirection.y * i),
+                0
+            );
+            
             if (wallTilemap.HasTile(checkPos))
             {
                 Vector3 wallWorldPos = wallTilemap.GetCellCenterWorld(checkPos);
@@ -62,8 +74,16 @@ public class GuardController : MonoBehaviour
             }
         }
 
-        // Update the flashlight scale
         flashlightTransform.localScale = new Vector3(1, length, 1);
+    }
+
+    private void UpdateSmoothRotation()
+    {
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation, 
+            targetRotation, 
+            rotationSpeed * Time.deltaTime
+        );
     }
 
     public void setFlashlightLength(float length)
@@ -92,7 +112,7 @@ public class GuardController : MonoBehaviour
         {
             targetPosition = wallTilemap.GetCellCenterWorld(targetCell);
             isMoving = true;
-            currentDirection = new Vector2Int(moveDirection.x, moveDirection.y); // Store the direction
+            currentDirection = new Vector2Int(moveDirection.x, moveDirection.y);
             UpdateRotation(moveDirection);
         }
     }
@@ -116,6 +136,6 @@ public class GuardController : MonoBehaviour
     private void UpdateRotation(Vector3Int direction)
     {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-        transform.rotation = Quaternion.Euler(0, 0, angle - 180);
+        targetRotation = Quaternion.Euler(0, 0, angle - 180);
     }
 }
