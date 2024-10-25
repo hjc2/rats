@@ -14,12 +14,12 @@ public class PlayerController : MonoBehaviour
     private Vector3 startPosition;
     private Vector3 endPosition;
     private Vector3Int moveDirection = Vector3Int.zero;
-    // public BoxCollider boxCollider;
     private Vector3 resetPosition;
 
     private void Start()
     {
-        wallTilemap = FindObjectOfType<GameManager>().wallTilemap;
+        wallTilemap = FindObjectOfType<Tilemap>();
+
         currentCell = wallTilemap.WorldToCell(transform.position);
         targetCell = currentCell;
         SnapToGridCenter();
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
             moveDirection.x = 1;
     }
 
-        private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("Player Spotted");
         // resetPosition = transform.position;
