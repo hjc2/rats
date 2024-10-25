@@ -98,10 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 268e1cd70f4611e44b0677646264f859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  patrolOffsets: []
   moveSpeed: 2
-  flashlightLength: 1
   rotationSpeed: 180
-  patrolPoints: []
+  loopPatrol: 1
 --- !u!1001 &4801835731445886319
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -152,7 +152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5770775171536289444, guid: 85b7c09ce75c8a5498a0581ca13dcf20, type: 3}
       propertyPath: m_Name
-      value: light
+      value: Flashlight
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
