@@ -105,6 +105,7 @@ public class Guard : MonoBehaviour
 void OnDrawGizmosSelected()
 {
     // Check if we should use absolute or relative positions
+    // relative for editor - absolute for runtime
     bool useAbsolute = worldPatrolPoints != null && worldPatrolPoints.Count > 0;
     
     Vector2Int previewStart = new Vector2Int(
@@ -112,56 +113,100 @@ void OnDrawGizmosSelected()
         Mathf.RoundToInt(transform.position.y)
     );
 
-    Gizmos.color = Color.yellow;
-
     // Draw points
     if (useAbsolute)
     {
         // Draw using absolute world positions
-        foreach (Vector3 point in worldPatrolPoints)
+        for (int i = 0; i < worldPatrolPoints.Count; i++)
         {
-            Gizmos.DrawWireSphere(point, 0.3f);
+            // Gradient from yellow to red based on position in sequence
+            float t = (float)i / Mathf.Max(1, worldPatrolPoints.Count - 1);
+            Gizmos.color = Color.Lerp(Color.yellow, Color.red, t);
+            Gizmos.DrawWireSphere(worldPatrolPoints[i], 0.3f);
         }
 
-        // Draw lines between points
+        // Draw lines between points with gradient and direction arrows
         for (int i = 0; i < worldPatrolPoints.Count - 1; i++)
         {
-            Gizmos.DrawLine(worldPatrolPoints[i], worldPatrolPoints[i + 1]);
+            float t = (float)i / Mathf.Max(1, worldPatrolPoints.Count - 1);
+            Gizmos.color = Color.Lerp(Color.yellow, Color.red, t);
+            
+            Vector3 start = worldPatrolPoints[i];
+            Vector3 end = worldPatrolPoints[i + 1];
+            Gizmos.DrawLine(start, end);
+            
+            // Draw direction arrow
+            DrawDirectionArrow(start, end);
         }
 
         // Draw line between last and first point if looping
         if (loopPatrol && worldPatrolPoints.Count > 1)
         {
-            Gizmos.DrawLine(
-                worldPatrolPoints[worldPatrolPoints.Count - 1],
-                worldPatrolPoints[0]
-            );
+            Gizmos.color = Color.red;
+            Vector3 start = worldPatrolPoints[worldPatrolPoints.Count - 1];
+            Vector3 end = worldPatrolPoints[0];
+            Gizmos.DrawLine(start, end);
+            DrawDirectionArrow(start, end);
         }
     }
     else
     {
         // Draw using relative offsets
+        List<Vector3> previewPoints = new List<Vector3>();
+        
+        // Convert offsets to world points for preview
         foreach (Vector2Int offset in patrolOffsets)
         {
-            Vector3 worldPoint = new Vector3(previewStart.x + offset.x, previewStart.y + offset.y, 0);
-            Gizmos.DrawWireSphere(worldPoint, 0.3f);
+            previewPoints.Add(new Vector3(previewStart.x + offset.x, previewStart.y + offset.y, 0));
         }
 
-        // Draw lines between points
-        for (int i = 0; i < patrolOffsets.Count - 1; i++)
+        // Draw points with gradient
+        for (int i = 0; i < previewPoints.Count; i++)
         {
-            Vector3 start = new Vector3(previewStart.x + patrolOffsets[i].x, previewStart.y + patrolOffsets[i].y, 0);
-            Vector3 end = new Vector3(previewStart.x + patrolOffsets[i + 1].x, previewStart.y + patrolOffsets[i + 1].y, 0);
+            float t = (float)i / Mathf.Max(1, previewPoints.Count - 1);
+            Gizmos.color = Color.Lerp(Color.yellow, Color.red, t);
+            Gizmos.DrawWireSphere(previewPoints[i], 0.3f);
+        }
+
+        // Draw lines between points with gradient and direction arrows
+        for (int i = 0; i < previewPoints.Count - 1; i++)
+        {
+            float t = (float)i / Mathf.Max(1, previewPoints.Count - 1);
+            Gizmos.color = Color.Lerp(Color.yellow, Color.red, t);
+            
+            Vector3 start = previewPoints[i];
+            Vector3 end = previewPoints[i + 1];
             Gizmos.DrawLine(start, end);
+            
+            // Draw direction arrow
+            DrawDirectionArrow(start, end);
         }
 
         // Draw line between last and first point if looping
-        if (loopPatrol && patrolOffsets.Count > 1)
+        if (loopPatrol && previewPoints.Count > 1)
         {
-            Vector3 start = new Vector3(previewStart.x + patrolOffsets[patrolOffsets.Count - 1].x, previewStart.y + patrolOffsets[patrolOffsets.Count - 1].y, 0);
-            Vector3 end = new Vector3(previewStart.x + patrolOffsets[0].x, previewStart.y + patrolOffsets[0].y, 0);
+            Gizmos.color = Color.red;
+            Vector3 start = previewPoints[previewPoints.Count - 1];
+            Vector3 end = previewPoints[0];
             Gizmos.DrawLine(start, end);
+            DrawDirectionArrow(start, end);
         }
     }
+}
+
+private void DrawDirectionArrow(Vector3 start, Vector3 end)
+{
+    Vector3 direction = (end - start).normalized;
+    Vector3 middle = Vector3.Lerp(start, end, 0.5f);
+    
+    // Calculate perpendicular vectors for arrow
+    Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0) * 0.2f;
+    
+    // Draw arrow head
+    Vector3 arrowStart = middle - direction * 0.2f;
+    Vector3 tip = middle + direction * 0.2f;
+    
+    Gizmos.DrawLine(arrowStart + perpendicular, tip);
+    Gizmos.DrawLine(arrowStart - perpendicular, tip);
 }
 }
