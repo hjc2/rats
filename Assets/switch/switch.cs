@@ -16,5 +16,10 @@ public class SwitchController : MonoBehaviour
                 child.gameObject.SetActive(isActivated);
             }
         }
+        ToggleVisual();
+    }
+
+    public void ToggleVisual(){
+        GetComponent<SpriteRenderer>().color = isActivated ? new Color(0.4f, 0.2f, 0) : new Color(0.8f, 0.4f, 0);  // Dark brown : Light brown
     }
 }
