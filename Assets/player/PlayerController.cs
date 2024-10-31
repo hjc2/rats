@@ -1,111 +1,69 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveDuration = 0.2f; // Duration of movement between tiles
-    private Vector3Int currentCell;
-    private Vector3Int targetCell;
-    private bool isMoving = false;
-    private Tilemap wallTilemap;
-    private float moveTimer = 0f;
-    private Vector3 startPosition;
-    private Vector3 endPosition;
-    private Vector3Int moveDirection = Vector3Int.zero;
+    public float speed;
+    private Vector2 movement;
+    public Transform targetPosition;
+    public LayerMask UnwalkableLayer;
+    public LayerMask MoveableLayer;
     private Vector3 resetPosition;
 
-    private void Start()
-    {
-        wallTilemap = FindObjectOfType<Tilemap>();
-
-        currentCell = wallTilemap.WorldToCell(transform.position);
-        targetCell = currentCell;
-        SnapToGridCenter();
-        resetPosition = transform.position;
+    private void Awake() {
+      targetPosition.position = transform.position;
     }
 
-    private void Update()
-    {
-        HandleInput();
-        
-        if (isMoving)
-        {
-            SmoothMove();
-        }
-        else if (moveDirection != Vector3Int.zero)
-        {
-            TryMove(moveDirection);
-        }
+    void Start() {
+      resetPosition = transform.position;
     }
 
-    private void HandleInput()
+    // Update is called once per frame
+    void Update()
     {
-        moveDirection = Vector3Int.zero;
-
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-            moveDirection.y = 1;
-        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-            moveDirection.y = -1;
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            moveDirection.x = -1;
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-            moveDirection.x = 1;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        Debug.Log("Player Spotted");
-        // resetPosition = transform.position;
-        transform.position = resetPosition;
-        currentCell = wallTilemap.WorldToCell(transform.position);
-        targetCell = currentCell;
-        startPosition = transform.position;
-        endPosition = wallTilemap.GetCellCenterWorld(targetCell);
-        // SnapToGridCenter();
-
-    }
-
-    private void TryMove(Vector3Int direction)
-    {
-        Vector3Int newTargetCell = currentCell + direction;
-        if (!wallTilemap.HasTile(newTargetCell))
-        {
-            targetCell = newTargetCell;
-            startPosition = transform.position;
-            endPosition = wallTilemap.GetCellCenterWorld(targetCell);
-            isMoving = true;
-            moveTimer = 0f;
-        }
-    }
-
-    private void SmoothMove()
-    {
-        moveTimer += Time.deltaTime;
-        float t = Mathf.Clamp01(moveTimer / moveDuration);
-        
-        // Use smoothstep for easing
-        t = t * t * (3f - 2f * t);
-        
-        transform.position = Vector3.Lerp(startPosition, endPosition, t);
-
-        if (moveTimer >= moveDuration)
-        {
-            transform.position = endPosition;
-            currentCell = targetCell;
-            isMoving = false;
-            
-            // Immediately try to move again in the held direction
-            if (moveDirection != Vector3Int.zero)
-            {
-                TryMove(moveDirection);
+      if(Vector3.Distance(transform.position, targetPosition.position) < 0.01f &&
+         !Physics2D.OverlapCircle(targetPosition.position + new Vector3(movement.x, movement.y, 0f), 0.1f, UnwalkableLayer)) {
+          //if the player is not near an unwalkable layer
+            if(Physics2D.OverlapCircle(targetPosition.position + new Vector3(movement.x, movement.y, 0f), 0.1f, MoveableLayer)) {
+              //if the target
+              if(!Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movement.x, 2*movement.y, 0f), 0.1f, UnwalkableLayer) &&
+                 !Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movement.x, 2*movement.y, 0f), 0.1f, MoveableLayer)) {
+                targetPosition.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
+              }
+            } else {
+              targetPosition.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
             }
-        }
+         }
+      transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, speed * Time.deltaTime);
+      //transform.Translate(Vector3.Normalize(movement) * speed * Time.deltaTime);
     }
 
-    private void SnapToGridCenter()
-    {
-        transform.position = wallTilemap.GetCellCenterWorld(currentCell);
+    void OnMove(InputValue value) {
+      movement = value.Get<Vector2>();
+    }
+
+    
+
+    private void OnCollisionEnter2D(Collision2D other) {
+      if(other.gameObject.CompareTag("Box")) {
+        other.gameObject.transform.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
+      }
+      if(other.gameObject.CompareTag("light")) {
+        transform.position = resetPosition;
+        targetPosition.position = transform.position;
+      }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+      if(other.CompareTag("Box")) {
+        other.gameObject.transform.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
+      }
+      if(other.CompareTag("light")) {
+        transform.position = resetPosition;
+        targetPosition.position = transform.position;
+      }
     }
 }
