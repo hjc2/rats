@@ -13,6 +13,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Pull",
+                    "type": "Value",
+                    "id": "1d4623e1-2b6e-47d2-8282-36cd90ad4bd4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -125,6 +134,17 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "26b9d71b-9cfc-4ae0-b2b1-26a0a8bff175",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
