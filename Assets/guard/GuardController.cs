@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class Guard : MonoBehaviour
 {
     [Header("Patrol Settings")]
-    public List<Vector2Int> patrolOffsets = new List<Vector2Int>(); // Relative Offsets Input
+    public List<Vector2> patrolOffsets = new List<Vector2>(); // Relative Offsets Input
     public float moveSpeed = 5f;
     public float rotationSpeed = 360f;
     public bool loopPatrol = true;
@@ -14,21 +14,21 @@ public class Guard : MonoBehaviour
     private Transform flashlight;
     private int currentPoint = 0;
     private bool isMovingForward = true;
-    private Vector2Int startPosition;
+    private Vector2 startPosition;
     private List<Vector3> worldPatrolPoints = new List<Vector3>(); // Absolute locations for patrol
     //private bool isRotating = false;
 
     void Start()
     {
         // Store the guard's starting position in grid coordinates
-        startPosition = new Vector2Int(
-            Mathf.RoundToInt(transform.position.x),
-            Mathf.RoundToInt(transform.position.y)
+        startPosition = new Vector2(
+            transform.position.x,
+            transform.position.y
         );
 
         // Convert relative offsets to world positions
         worldPatrolPoints.Clear();
-        foreach (Vector2Int offset in patrolOffsets)
+        foreach (Vector2 offset in patrolOffsets)
         {
             Vector3 worldPoint = new Vector3(
                 startPosition.x + offset.x,
@@ -128,9 +128,9 @@ void OnDrawGizmosSelected()
     // relative for editor - absolute for runtime
     bool useAbsolute = worldPatrolPoints != null && worldPatrolPoints.Count > 0;
     
-    Vector2Int previewStart = new Vector2Int(
-        Mathf.RoundToInt(transform.position.x),
-        Mathf.RoundToInt(transform.position.y)
+    Vector2 previewStart = new Vector2(
+        transform.position.x,
+        transform.position.y
     );
 
     // Draw points
@@ -175,7 +175,7 @@ void OnDrawGizmosSelected()
         List<Vector3> previewPoints = new List<Vector3>();
         
         // Convert offsets to world points for preview
-        foreach (Vector2Int offset in patrolOffsets)
+        foreach (Vector2 offset in patrolOffsets)
         {
             previewPoints.Add(new Vector3(previewStart.x + offset.x, previewStart.y + offset.y, 0));
         }
