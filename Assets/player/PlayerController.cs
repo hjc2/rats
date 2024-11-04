@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+// using SwitchController;
+
 public class PlayerController : MonoBehaviour
 {
     public float moveDuration = 0.2f; // Duration of movement between tiles
@@ -52,19 +54,40 @@ public class PlayerController : MonoBehaviour
             moveDirection.x = -1;
         else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             moveDirection.x = 1;
+        else if (Input.GetKeyDown(KeyCode.E))
+            activateTile();
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+private void activateTile()
+{
+    Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position);
+    foreach (Collider2D collider in colliders)
     {
-        Debug.Log("Player Spotted");
-        // resetPosition = transform.position;
-        transform.position = resetPosition;
-        currentCell = wallTilemap.WorldToCell(transform.position);
-        targetCell = currentCell;
-        startPosition = transform.position;
-        endPosition = wallTilemap.GetCellCenterWorld(targetCell);
-        // SnapToGridCenter();
+        if (collider.CompareTag("switch"))
+        {
+            SwitchController switchController = collider.GetComponent<SwitchController>();
+            if (switchController != null)
+            {
+                switchController.ToggleState();
+                Debug.Log($"Switch Clicked - State: {switchController.isActivated}");
+            }
+        }
+    }
+}
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {   
+        switch (other.gameObject.tag)
+        {
+            case "light":
+                Debug.Log("Player Spotted");
+                transform.position = resetPosition;
+                currentCell = wallTilemap.WorldToCell(transform.position);
+                targetCell = currentCell;
+                startPosition = transform.position;
+                endPosition = wallTilemap.GetCellCenterWorld(targetCell);
+                break;
+        }
     }
 
     private void TryMove(Vector3Int direction)
