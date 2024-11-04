@@ -16,6 +16,7 @@ public class Guard : MonoBehaviour
     private bool isMovingForward = true;
     private Vector2Int startPosition;
     private List<Vector3> worldPatrolPoints = new List<Vector3>(); // Absolute locations for patrol
+    //private bool isRotating = false;
 
     void Start()
     {
@@ -48,6 +49,20 @@ public class Guard : MonoBehaviour
         if (flashlight == null){ Debug.LogError("Flashlight not found as child of guard! Please ensure there's a child object named 'Flashlight'"); }
     }
 
+
+    // void MoveTowardsTarget(float speed, Vector3 targetPt) {
+    //     transform.position = Vector3.MoveTowards(transform.position,
+    //                                            targetPt,
+    //                                            speed * Time.deltaTime);
+    // }
+
+    // void RotateTowardsTarget(Vector3 dir) {
+    //     float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+    //     Quaternion targetRotation = Quaternion.Euler(0, 0, angle + 90);
+    //     transform.rotation = Quaternion.RotateTowards(transform.rotation,
+    //                                                 targetRotation,
+    //                                                 rotationSpeed * Time.deltaTime);
+    // }
     void Update()
     {
         if (worldPatrolPoints.Count <= 1) return;
@@ -55,20 +70,25 @@ public class Guard : MonoBehaviour
         // Get current target point
         Vector3 targetPoint = worldPatrolPoints[currentPoint];
 
-        // Move towards target
-        transform.position = Vector3.MoveTowards(transform.position,
-                                               targetPoint,
-                                               moveSpeed * Time.deltaTime);
+        // Get direction you want to move (vector from current position to target position)
+        Vector3 movementDirection = (targetPoint - transform.position).normalized;
 
-        // Rotate towards movement direction
-        Vector3 direction = (targetPoint - transform.position).normalized;
-        if (direction != Vector3.zero)
-        {
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            Quaternion targetRotation = Quaternion.Euler(0, 0, angle + 90);
+        // Current orientation of the guard
+        float angle = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg;
+        
+        // Desired orientation of the guard
+        Quaternion targetRotation = Quaternion.Euler(0, 0, angle + 90);
+
+        // If the guard is not facing the target position
+        if (transform.rotation != targetRotation)
+        { // rotate, don't move
             transform.rotation = Quaternion.RotateTowards(transform.rotation,
                                                         targetRotation,
                                                         rotationSpeed * Time.deltaTime);
+        } else { // else guard is facing target position, so move, but don't rotate
+        transform.position = Vector3.MoveTowards(transform.position,
+                                               targetPoint,
+                                               moveSpeed * Time.deltaTime);
         }
 
         // Check if reached target point
