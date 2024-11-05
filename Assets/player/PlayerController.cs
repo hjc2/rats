@@ -9,12 +9,15 @@ public class PlayerController : MonoBehaviour
     public float speed;
     private Vector2 movement;
     public Transform targetPosition;
+    private Vector3 boxTarget;
     public LayerMask UnwalkableLayer;
     public LayerMask MoveableLayer;
     private Vector3 resetPosition;
     private bool shift = false;
     private bool pulling = false;
+    private bool pushing = false;
     private GameObject result;
+    private bool moving = false;
 
     private void Awake() {
       targetPosition.position = transform.position;
@@ -32,37 +35,64 @@ public class PlayerController : MonoBehaviour
           //if the player is not near an unwalkable layer
             if(Physics2D.OverlapCircle(targetPosition.position + new Vector3(movement.x, movement.y, 0f), 0.1f, MoveableLayer)) {
               //if there is a box in front of the player
+              Debug.Log("IN");
               if(!Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movement.x, 2*movement.y, 0f), 0.1f, UnwalkableLayer) &&
-                 !Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movement.x, 2*movement.y, 0f), 0.1f, MoveableLayer)) {
-                targetPosition.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
+                 !Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movement.x, 2*movement.y, 0f), 0.1f, MoveableLayer)) {//can't push box through wall
+                  //Debug.Log("BREAK");
+                  pushing = true;
+                  result = findBox(transform.position); //CHANGED
+                  targetPosition.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
               }
             } else if(Physics2D.OverlapCircle(transform.position + new Vector3(-movement.x, -movement.y, 0f), 0.1f, MoveableLayer) && shift) {
               //if a box is in the opposite direction that the player is moving and shift is held
-              Debug.Log("pull?");
               pulling = true;
               targetPosition.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
-              Collider2D [] results = Physics2D.OverlapCircleAll(transform.position, 1f);
-              foreach(Collider2D coll in results){
-                if(coll.gameObject.CompareTag("Box")) {
-                  result = coll.gameObject;
-                }
-              }
+              result = findBox(transform.position);
               //result.transform.position = new Vector3(targetPosition.position.x - movement.x, 0, 0f);
               Debug.Log(result);
               //transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, speed * Time.deltaTime);
             } else {
+              pushing = false;
               targetPosition.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
             }
          }
-         if(pulling) {
-          result.transform.position = Vector3.MoveTowards(result.transform.position, new Vector3(targetPosition.position.x - movement.x, targetPosition.position.y - movement.y), speed * Time.deltaTime);
+
+         if(pulling && moving) {
+          boxTarget = new Vector3(targetPosition.position.x - movement.x, targetPosition.position.y - movement.y);
+          //result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
+         }
+         else if(pushing && moving) {
+          //result = findBox(transform.position);
+          boxTarget = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y);
+          //result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
+         }
+         
+         if(result != null){
+          Debug.Log("HERE");
+          result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
          }
          transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, speed * Time.deltaTime);
       //transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, speed * Time.deltaTime);
       //transform.Translate(Vector3.Normalize(movement) * speed * Time.deltaTime);
     }
 
+    private GameObject findBox(Vector3 position) {
+      Collider2D [] results = Physics2D.OverlapCircleAll(position, 1f);
+      foreach(Collider2D coll in results){
+        if(coll.gameObject.CompareTag("Box")) {
+          result = coll.gameObject;
+        }
+      }
+      return result;
+    }
+
     void OnMove(InputValue value) {
+      if(value.Get() != null) { //start to move
+        moving = true; //toggle moving
+      }
+      else {
+        moving = false;
+      }
       movement = value.Get<Vector2>();
     }
 
@@ -79,10 +109,13 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-      if(other.CompareTag("Box")) {
-        Debug.Log("trigger");
-        other.gameObject.transform.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
-      }
+      //if(other.CompareTag("Box")) {
+        //pushing = true;
+        //Debug.Log("trigger");
+        //other.gameObject.transform.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
+        //GameObject result = other.gameObject;
+        //result.transform.position = Vector3.MoveTowards(result.transform.position, new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y), speed * Time.deltaTime);
+      //}
       if(other.CompareTag("light")) {
         transform.position = resetPosition;
         targetPosition.position = transform.position;
