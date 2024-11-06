@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
+// using SwitchController;
+
 public class PlayerController : MonoBehaviour
 {
     public float speed;
@@ -54,6 +56,7 @@ public class PlayerController : MonoBehaviour
             }
          }
 
+
          if(pulling && moving) {
           boxTarget = new Vector3(targetPosition.position.x - movement.x, targetPosition.position.y - movement.y);
           //result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
@@ -87,6 +90,38 @@ public class PlayerController : MonoBehaviour
       return result;
     }
 
+private void activateTile()
+{
+    Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position);
+    foreach (Collider2D collider in colliders)
+    {
+        if (collider.CompareTag("switch"))
+        {
+            SwitchController switchController = collider.GetComponent<SwitchController>();
+            if (switchController != null)
+            {
+                switchController.ToggleState();
+                Debug.Log($"Switch Clicked - State: {switchController.isActivated}");
+            }
+        }
+    }
+}
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {   
+        switch (other.gameObject.tag)
+        {
+            case "light":
+                Debug.Log("Player Spotted");
+                transform.position = resetPosition;
+                currentCell = wallTilemap.WorldToCell(transform.position);
+                targetCell = currentCell;
+                startPosition = transform.position;
+                endPosition = wallTilemap.GetCellCenterWorld(targetCell);
+                break;
+        }
+    }
+
     //creates overlap square to make sure the correct box is pulled
     private Vector2 toSquare(Vector2 direction) {
       if(direction.x == 0) { return new Vector2(0.1f, Mathf.Abs(direction.y)); }
@@ -109,20 +144,6 @@ public class PlayerController : MonoBehaviour
       else {
         shift = false;
         pulling = false;
-      }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other) {
-      //if(other.CompareTag("Box")) {
-        //pushing = true;
-        //Debug.Log("trigger");
-        //other.gameObject.transform.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
-        //GameObject result = other.gameObject;
-        //result.transform.position = Vector3.MoveTowards(result.transform.position, new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y), speed * Time.deltaTime);
-      //}
-      if(other.CompareTag("light")) {
-        transform.position = resetPosition;
-        targetPosition.position = transform.position;
       }
     }
 }
