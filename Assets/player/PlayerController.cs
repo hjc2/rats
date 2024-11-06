@@ -107,20 +107,21 @@ private void activateTile()
     }
 }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {   
-        switch (other.gameObject.tag)
-        {
-            case "light":
-                Debug.Log("Player Spotted");
-                transform.position = resetPosition;
-                currentCell = wallTilemap.WorldToCell(transform.position);
-                targetCell = currentCell;
-                startPosition = transform.position;
-                endPosition = wallTilemap.GetCellCenterWorld(targetCell);
-                break;
-        }
-    }
+    // private void OnTriggerEnter2D(Collider2D other)
+    // {   
+    //     switch (other.gameObject.tag)
+    //     {
+    //         case "light":
+    //             Debug.Log("Player Spotted");
+    //             transform.position = resetPosition;
+    //             targetPosition.position = transform.position;
+    //             // currentCell = wallTilemap.WorldToCell(transform.position);
+    //             // targetCell = currentCell;
+    //             // startPosition = transform.position;
+    //             // endPosition = wallTilemap.GetCellCenterWorld(targetCell);
+    //             break;
+    //     }
+    // }
 
     //creates overlap square to make sure the correct box is pulled
     private Vector2 toSquare(Vector2 direction) {
@@ -130,6 +131,8 @@ private void activateTile()
     }
 
     void OnMove(InputValue value) {
+
+      Debug.Log("moving!");
       if(value.Get() != null) { //start to move
         moving = true; //toggle moving
       }

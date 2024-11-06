@@ -8,7 +8,6 @@ TagManager:
   - guard
   - Box
   - switch
-
   layers:
   - Default
   - TransparentFX
@@ -17,10 +16,10 @@ TagManager:
   - Water
   - UI
   - Moveable
-  - Walls
   - 
   - 
-  - Player
+  - 
+  - 
   - 
   - 
   - 
@@ -45,10 +44,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: level
-    uniqueID: 2859299699
-    locked: 0
-  - name: player
-    uniqueID: 1889346607
     locked: 0
