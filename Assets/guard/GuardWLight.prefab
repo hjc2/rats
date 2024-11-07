@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8010743680481636330}
   - component: {fileID: 3708947845912772628}
-  - component: {fileID: 509762227451974507}
-  m_Layer: 0
+  - component: {fileID: 819701306499873691}
+  m_Layer: 2
   m_Name: Flashlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ MonoBehaviour:
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
-  m_ShadowIntensityEnabled: 0
+  m_ShadowIntensityEnabled: 1
   m_ShadowIntensity: 0.75
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
@@ -83,51 +83,21 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
---- !u!61 &509762227451974507
-BoxCollider2D:
+--- !u!114 &819701306499873691
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4789179183504450402}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39f19f0b557954c6893774afa9bc7e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.0016584024, y: 1.1403228}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.23199289, y: 0.64666057}
-  m_EdgeRadius: 0
+    m_Bits: 73
 --- !u!1 &5204615420816481185
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,7 +109,7 @@ GameObject:
   - component: {fileID: 5190894318796426459}
   - component: {fileID: 9098354271928914235}
   - component: {fileID: 6748851860981658664}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Light 2D (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

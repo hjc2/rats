@@ -9,7 +9,9 @@ using UnityEngine.Tilemaps;
 public class PlayerController : MonoBehaviour
 {
     public float speed;
-    private Vector2 movement;
+    public Vector3 respawnPoint;
+    private Vector2 currentInput;
+    private Vector2 movementDirection;
     public Transform targetPosition;
     private Vector3 boxTarget;
     public LayerMask UnwalkableLayer;
@@ -21,8 +23,10 @@ public class PlayerController : MonoBehaviour
     private GameObject result;
     private bool moving = false;
 
+
     private void Awake() {
       targetPosition.position = transform.position;
+      respawnPoint = transform.position;
     }
 
     void Start() {
@@ -33,37 +37,37 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
       if(Vector3.Distance(transform.position, targetPosition.position) < 0.01f &&
-         !Physics2D.OverlapCircle(targetPosition.position + new Vector3(movement.x, movement.y, 0f), 0.1f, UnwalkableLayer)) {
+         !Physics2D.OverlapCircle(targetPosition.position + new Vector3(movementDirection.x, movementDirection.y, 0f), 0.1f, UnwalkableLayer)) {
           //if the player is not near an unwalkable layer
-            if(Physics2D.OverlapCircle(targetPosition.position + new Vector3(movement.x, movement.y, 0f), 0.1f, MoveableLayer)) {
+            if(Physics2D.OverlapCircle(targetPosition.position + new Vector3(movementDirection.x, movementDirection.y, 0f), 0.1f, MoveableLayer)) {
               //if there is a box in front of the player
-              if(!Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movement.x, 2*movement.y, 0f), 0.1f, UnwalkableLayer) &&
-                 !Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movement.x, 2*movement.y, 0f), 0.1f, MoveableLayer)) {//can't push box through wall
+              if(!Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movementDirection.x, 2*movementDirection.y, 0f), 0.1f, UnwalkableLayer) &&
+                 !Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movementDirection.x, 2*movementDirection.y, 0f), 0.1f, MoveableLayer)) {//can't push box through wall
                   pushing = true;
-                  result = findBox(transform.position, movement); //CHANGED
-                  targetPosition.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
+                  result = findBox(transform.position, movementDirection); //CHANGED
+                  targetPosition.position = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y, 0f);
               }
-            } else if(Physics2D.OverlapCircle(transform.position + new Vector3(-movement.x, -movement.y, 0f), 0.1f, MoveableLayer) && shift) {
+            } else if(Physics2D.OverlapCircle(transform.position + new Vector3(-movementDirection.x, -movementDirection.y, 0f), 0.1f, MoveableLayer) && shift) {
               //if a box is in the opposite direction that the player is moving and shift is held
               pulling = true;
-              targetPosition.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
-              result = findBox(transform.position, movement);
-              //result.transform.position = new Vector3(targetPosition.position.x - movement.x, 0, 0f);
+              targetPosition.position = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y, 0f);
+              result = findBox(transform.position, movementDirection);
+              //result.transform.position = new Vector3(targetPosition.position.x - movementDirection.x, 0, 0f);
               //transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, speed * Time.deltaTime);
             } else {
               pushing = false;
-              targetPosition.position = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y, 0f);
+              targetPosition.position = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y, 0f);
             }
          }
 
 
          if(pulling && moving) {
-          boxTarget = new Vector3(targetPosition.position.x - movement.x, targetPosition.position.y - movement.y);
+          boxTarget = new Vector3(targetPosition.position.x - movementDirection.x, targetPosition.position.y - movementDirection.y);
           //result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
          }
          else if(pushing && moving) {
           //result = findBox(transform.position);
-          boxTarget = new Vector3(targetPosition.position.x + movement.x, targetPosition.position.y + movement.y);
+          boxTarget = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y);
           //result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
          }
          
@@ -72,7 +76,7 @@ public class PlayerController : MonoBehaviour
          }
          transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, speed * Time.deltaTime);
       //transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, speed * Time.deltaTime);
-      //transform.Translate(Vector3.Normalize(movement) * speed * Time.deltaTime);
+      //transform.Translate(Vector3.Normalize(movementDirection) * speed * Time.deltaTime);
     }
 
     private GameObject findBox(Vector2 position, Vector2 direction) {
@@ -139,7 +143,37 @@ private void activateTile()
       else {
         moving = false;
       }
-      movement = value.Get<Vector2>();
+      currentInput = value.Get<Vector2>().normalized;
+      movementDirection = GetDirection(currentInput);
+    }
+
+    Vector2 GetDirection(Vector2 input)
+    {
+      Vector2 finalDirection = Vector2.zero;
+            if (input.y > 0.01f)
+            {
+                //lastDirection = "Up";
+                finalDirection = new Vector2(0, 1);
+            }
+            else if (input.y < -0.01f)
+            {
+                //lastDirection = "Down";
+                finalDirection = new Vector2(0, -1);
+            }
+            else if (input.x > 0.01f)
+            {
+                //lastDirection = "Right";
+                finalDirection = new Vector2(1, 0);
+            }
+            else if (input.x < -0.01f)
+            {
+                //lastDirection = "Left";
+                finalDirection = new Vector2(-1, 0);
+            }
+            else
+                finalDirection = Vector2.zero;
+
+            return finalDirection;
     }
 
     void OnPull(InputValue value) {
@@ -148,5 +182,11 @@ private void activateTile()
         shift = false;
         pulling = false;
       }
+    }
+
+    public void ResetPlayerPosition()
+    {
+      transform.position = respawnPoint;
+      targetPosition.position = respawnPoint;
     }
 }
