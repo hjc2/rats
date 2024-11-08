@@ -551,6 +551,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3708947845912772628, guid: c166b46b7664a403a84d32d3c21d0cc7, type: 3}
+      propertyPath: m_Intensity
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3708947845912772628, guid: c166b46b7664a403a84d32d3c21d0cc7, type: 3}
+      propertyPath: m_PointLightOuterRadius
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8094217614376894832, guid: c166b46b7664a403a84d32d3c21d0cc7, type: 3}
       propertyPath: m_Name
       value: GuardWLight (1)
@@ -655,6 +663,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3708947845912772628, guid: c166b46b7664a403a84d32d3c21d0cc7, type: 3}
+      propertyPath: m_Intensity
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3708947845912772628, guid: c166b46b7664a403a84d32d3c21d0cc7, type: 3}
+      propertyPath: m_PointLightOuterRadius
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8094217614376894832, guid: c166b46b7664a403a84d32d3c21d0cc7, type: 3}
       propertyPath: m_Name
       value: GuardWLight (2)
@@ -822,6 +838,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3708947845912772628, guid: c166b46b7664a403a84d32d3c21d0cc7, type: 3}
+      propertyPath: m_Intensity
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3708947845912772628, guid: c166b46b7664a403a84d32d3c21d0cc7, type: 3}
+      propertyPath: m_PointLightOuterRadius
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8094217614376894832, guid: c166b46b7664a403a84d32d3c21d0cc7, type: 3}
       propertyPath: m_Name
       value: GuardWLight
