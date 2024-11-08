@@ -44,7 +44,7 @@ public class LightRaycast : MonoBehaviour
 
         if (hit.collider != null) 
         { 
-            Debug.Log("Raycast hit: " + hit.collider.name);
+            // Debug.Log("Raycast hit: " + hit.collider.name);
             if (hit.collider.CompareTag("Player"))
             {
                 Debug.Log("Player detected in light beam");
@@ -52,7 +52,7 @@ public class LightRaycast : MonoBehaviour
             } 
         } else 
         { 
-            Debug.Log("No collision detected.");
+            // Debug.Log("No collision detected.");
         }
         // if (hit.collider != null && hit.collider.CompareTag("Player"))
         // {
