@@ -96,11 +96,15 @@ public class PlayerController : MonoBehaviour
 
 private void activateTile()
 {
-    Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position);
+    // Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position);
+
+    Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.3f);
+
     foreach (Collider2D collider in colliders)
     {
         if (collider.CompareTag("switch"))
         {
+            Debug.Log("SWITCH!");
             SwitchController switchController = collider.GetComponent<SwitchController>();
             if (switchController != null)
             {
@@ -111,21 +115,6 @@ private void activateTile()
     }
 }
 
-    // private void OnTriggerEnter2D(Collider2D other)
-    // {   
-    //     switch (other.gameObject.tag)
-    //     {
-    //         case "light":
-    //             Debug.Log("Player Spotted");
-    //             transform.position = resetPosition;
-    //             targetPosition.position = transform.position;
-    //             // currentCell = wallTilemap.WorldToCell(transform.position);
-    //             // targetCell = currentCell;
-    //             // startPosition = transform.position;
-    //             // endPosition = wallTilemap.GetCellCenterWorld(targetCell);
-    //             break;
-    //     }
-    // }
 
     //creates overlap square to make sure the correct box is pulled
     private Vector2 toSquare(Vector2 direction) {
@@ -181,6 +170,13 @@ private void activateTile()
       else {
         shift = false;
         pulling = false;
+      }
+    }
+
+    void OnToggle(InputValue value) {
+      if(value.isPressed){
+        Debug.Log("Pressed");
+        activateTile();
       }
     }
 
