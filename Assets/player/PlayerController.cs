@@ -185,4 +185,8 @@ private void activateTile()
       transform.position = respawnPoint;
       targetPosition.position = respawnPoint;
     }
+
+    // void OnTriggerEnter2D(Collider2D other) {
+    //   ResetPlayerPosition();
+    // }
 }
