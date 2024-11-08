@@ -5,14 +5,17 @@ TagManager:
   serializedVersion: 2
   tags:
   - light
+  - guard
+  - Box
+  - switch
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Unwalkable
   - Water
   - UI
-  - 
+  - Moveable
   - 
   - 
   - 
