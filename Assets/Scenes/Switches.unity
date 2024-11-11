@@ -331,7 +331,7 @@ GameObject:
   - component: {fileID: 482789687}
   m_Layer: 2
   m_Name: Light 2D (1)
-  m_TagString: Untagged
+  m_TagString: staticLight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -718,7 +718,7 @@ GameObject:
   - component: {fileID: 1646536373}
   m_Layer: 2
   m_Name: Light 2D (3)
-  m_TagString: Untagged
+  m_TagString: staticLight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2876,7 +2876,7 @@ GameObject:
   - component: {fileID: 2078647811}
   m_Layer: 2
   m_Name: Light 2D (2)
-  m_TagString: Untagged
+  m_TagString: staticLight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
