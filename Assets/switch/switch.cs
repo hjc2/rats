@@ -25,7 +25,28 @@ public class SwitchController : MonoBehaviour
         // Toggle all connected lights
         foreach (GameObject light in controlledLights)
         {
-            light.SetActive(isActivated);
+            // Get all components on the parent object only
+            Component[] parentComponents = light.GetComponents<Component>();
+            
+            // Disable all components on the parent except Transform
+            foreach (Component component in parentComponents)
+            {
+                if (!(component is Transform))
+                {
+                    if (component is Behaviour behaviour)
+                    {
+                        behaviour.enabled = isActivated;
+                    }
+                    else if (component is Renderer renderer)
+                    {
+                        renderer.enabled = isActivated;
+                    }
+                    else if (component is Collider collider)
+                    {
+                        collider.enabled = isActivated;
+                    }
+                }
+            }
         }
     }
 
