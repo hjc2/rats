@@ -8,6 +8,7 @@ TagManager:
   - guard
   - Box
   - switch
+  - staticLight
   layers:
   - Default
   - TransparentFX
