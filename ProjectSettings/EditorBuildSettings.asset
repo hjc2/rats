@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/lighting.unity
+    path: Assets/Scenes/box movement.unity
     guid: 57762294c6e9c41b3a89621c8b3a67b4
   - enabled: 1
     path: Assets/Scenes/sample.unity
