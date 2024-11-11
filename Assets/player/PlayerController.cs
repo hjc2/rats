@@ -186,7 +186,9 @@ private void activateTile()
       targetPosition.position = respawnPoint;
     }
 
-    // void OnTriggerEnter2D(Collider2D other) {
-    //   ResetPlayerPosition();
-    // }
+    void OnTriggerEnter2D(Collider2D other) {
+      if (other.gameObject.tag == "staticLight") {
+        ResetPlayerPosition();
+      }
+    }
 }
