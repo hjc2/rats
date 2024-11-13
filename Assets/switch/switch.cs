@@ -11,13 +11,12 @@ public class SwitchController : MonoBehaviour
     public List<GameObject> controlledLights = new List<GameObject>();
 
     private Color brightYellow = new Color(1f, 1f, 0f);      // Bright yellow
-    private Color darkYellow = new Color(0.5f, 0.5f, 0f);    // Dark yellow
+    private Color darkYellow = new Color(0.1f, 0.2f, 0.1f);    // Dark yellow
 
     public void ToggleState()
     {
         isActivated = !isActivated;
         UpdateLights();
-        ToggleVisual();
     }
 
     private void UpdateLights()
@@ -31,32 +30,37 @@ public class SwitchController : MonoBehaviour
             // Get all components on the parent object only
             Component[] parentComponents = light.GetComponents<Component>();
             
+            bool childStatus = false;
             // Disable all components on the parent except Transform
             foreach (Component component in parentComponents)
             {
+
                 if (!(component is Transform))
                 {
                     if (component is Behaviour behaviour)
                     {
-                        behaviour.enabled = isActivated;
+                        behaviour.enabled = !behaviour.enabled;
+                        childStatus = behaviour.enabled;
                     }
                     else if (component is Renderer renderer)
                     {
-                        renderer.enabled = isActivated;
+                        renderer.enabled = !renderer.enabled;
+                        childStatus = renderer.enabled;
                     }
                     else if (component is Collider collider)
                     {
-                        collider.enabled = isActivated;
+                        collider.enabled = !collider.enabled;
+                        childStatus = collider.enabled;
                     }
                 }
             }
 
             // Update all child renderers' colors
-            UpdateChildColors(light);
+            UpdateChildColors(light, childStatus);
         }
     }
 
-    private void UpdateChildColors(GameObject parent)
+    private void UpdateChildColors(GameObject parent, bool lightStatus)
     {
         // Get all renderers in children
         Renderer[] childRenderers = parent.GetComponentsInChildren<Renderer>(true);
@@ -67,22 +71,9 @@ public class SwitchController : MonoBehaviour
             {
                 if (renderer is SpriteRenderer spriteRenderer)
                 {
-                    spriteRenderer.color = isActivated ? brightYellow : darkYellow;
-                }
-                else
-                {
-                    // For other types of renderers (MeshRenderer, etc.)
-                    if (renderer.material != null)
-                    {
-                        renderer.material.color = isActivated ? brightYellow : darkYellow;
-                    }
+                    spriteRenderer.color = lightStatus ? brightYellow : darkYellow;
                 }
             }
         }
-    }
-
-    public void ToggleVisual()
-    {
-        GetComponent<SpriteRenderer>().color = isActivated ? new Color(0.4f, 0.2f, 0) : new Color(0.8f, 0.4f, 0);  // Dark brown : Light brown
     }
 }
