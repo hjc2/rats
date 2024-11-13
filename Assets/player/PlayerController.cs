@@ -246,6 +246,14 @@ private void activateTile()
     {
       transform.position = respawnPoint;
       targetPosition.position = respawnPoint;
+  
+      foreach (GameObject switchObj in GameObject.FindGameObjectsWithTag("switch"))
+      {
+          if (switchObj.TryGetComponent<SwitchController>(out var controller))
+          {
+              controller.ResetToOriginal();
+          }
+      }
     }
 
     void OnTriggerEnter2D(Collider2D other) {
