@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed;
+    private float speed = 5f;
     public Vector3 respawnPoint;
     private Vector2 currentInput;
     private Vector2 movementDirection;
@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private bool pushing = false;
     private GameObject result;
     private bool moving = false;
+    private Vector2 lastDirection = Vector2.zero;
 
 
     private void Awake() {
@@ -138,31 +139,92 @@ private void activateTile()
 
     Vector2 GetDirection(Vector2 input)
     {
-      Vector2 finalDirection = Vector2.zero;
-            if (input.y > 0.01f)
-            {
-                //lastDirection = "Up";
-                finalDirection = new Vector2(0, 1);
-            }
-            else if (input.y < -0.01f)
-            {
-                //lastDirection = "Down";
-                finalDirection = new Vector2(0, -1);
-            }
-            else if (input.x > 0.01f)
-            {
-                //lastDirection = "Right";
-                finalDirection = new Vector2(1, 0);
-            }
-            else if (input.x < -0.01f)
-            {
-                //lastDirection = "Left";
-                finalDirection = new Vector2(-1, 0);
-            }
-            else
-                finalDirection = Vector2.zero;
+      // Vector2 finalDirection = Vector2.zero;
+      //       if (input.y > 0.01f)
+      //       {
+      //           //lastDirection = "Up";
+      //           finalDirection = new Vector2(0, 1);
+      //       }
+      //       else if (input.y < -0.01f)
+      //       {
+      //           //lastDirection = "Down";
+      //           finalDirection = new Vector2(0, -1);
+      //       }
+      //       else if (input.x > 0.01f)
+      //       {
+      //           //lastDirection = "Right";
+      //           finalDirection = new Vector2(1, 0);
+      //       }
+      //       else if (input.x < -0.01f)
+      //       {
+      //           //lastDirection = "Left";
+      //           finalDirection = new Vector2(-1, 0);
+      //       }
+      //       else
+      //           finalDirection = Vector2.zero;
 
-            return finalDirection;
+      //       return finalDirection;
+      if (input == new Vector2(0, 1))
+      {
+        lastDirection = input;
+        return input;
+      }
+      else if (input == new Vector2(0, -1))
+      {
+        lastDirection = input;
+        return input;
+      }
+      else if (input == new Vector2(1, 0))
+      {
+        lastDirection = input;
+        return input;
+      }
+      else if (input == new Vector2(-1, 0))
+      {
+        lastDirection = input;
+        return input;
+      }
+      else if (Mathf.Abs(input.x) > 0.01f && Mathf.Abs(input.y) > 0.01f)
+      {
+        if (Mathf.Abs(lastDirection.x) == 1)
+        {
+          if (input.y > 0.01f)
+          {
+            return new Vector2(0, 1);
+          }
+          else if (input.y < -0.01f)
+          {
+            return new Vector2(0, -1);
+          }
+          else
+          {
+            return Vector2.zero;
+          }
+        }
+        else if (Mathf.Abs(lastDirection.y) == 1)
+        {
+          if (input.x > 0.01f)
+          {
+            return new Vector2(1, 0);
+          }
+          else if (input.x < -0.01f)
+          {
+            return new Vector2(-1, 0);
+          }
+          else 
+          {
+            return Vector2.zero;
+          }
+        }
+        else
+        {
+          return Vector2.zero;
+        }
+      }
+      else
+      {
+        return Vector2.zero;
+      }
     }
 
     void OnPull(InputValue value) {
