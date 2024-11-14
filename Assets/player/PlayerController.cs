@@ -44,12 +44,14 @@ public class PlayerController : MonoBehaviour
               //if there is a box in front of the player
               if(!Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movementDirection.x, 2*movementDirection.y, 0f), 0.1f, UnwalkableLayer) &&
                  !Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movementDirection.x, 2*movementDirection.y, 0f), 0.1f, MoveableLayer)) {//can't push box through wall
+                  Debug.Log("1");
                   pushing = true;
                   result = findBox(transform.position, movementDirection); //CHANGED
                   targetPosition.position = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y, 0f);
               }
             } else if(Physics2D.OverlapCircle(transform.position + new Vector3(-movementDirection.x, -movementDirection.y, 0f), 0.1f, MoveableLayer) && shift) {
               //if a box is in the opposite direction that the player is moving and shift is held
+              Debug.Log("2");
               pulling = true;
               targetPosition.position = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y, 0f);
               result = findBox(transform.position, movementDirection);
@@ -61,14 +63,13 @@ public class PlayerController : MonoBehaviour
             }
          }
 
-
-         if(pulling && moving) {
-          boxTarget = new Vector3(targetPosition.position.x - movementDirection.x, targetPosition.position.y - movementDirection.y);
-          //result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
-         }
-         else if(pushing && moving) {
+         if(pushing && moving) {
           //result = findBox(transform.position);
           boxTarget = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y);
+          //result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
+         }
+         else if(pulling && moving) {
+          boxTarget = new Vector3(targetPosition.position.x - movementDirection.x, targetPosition.position.y - movementDirection.y);
           //result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
          }
          
@@ -81,7 +82,6 @@ public class PlayerController : MonoBehaviour
     }
 
     private GameObject findBox(Vector2 position, Vector2 direction) {
-      Debug.Log(direction);
       Collider2D [] results = Physics2D.OverlapBoxAll(position, toSquare(direction), 0f);
       bool found = false;
       int i = 0;
@@ -125,8 +125,6 @@ private void activateTile()
     }
 
     void OnMove(InputValue value) {
-
-      Debug.Log("moving!");
       if(value.Get() != null) { //start to move
         moving = true; //toggle moving
       }
