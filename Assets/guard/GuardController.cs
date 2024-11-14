@@ -16,7 +16,6 @@ public class Guard : MonoBehaviour
     private bool isMovingForward = true;
     private Vector2 startPosition;
     private List<Vector3> worldPatrolPoints = new List<Vector3>(); // Absolute locations for patrol
-    //private bool isRotating = false;
 
     void Start()
     {
@@ -48,21 +47,7 @@ public class Guard : MonoBehaviour
         flashlight = transform.Find("Flashlight");
         if (flashlight == null){ Debug.LogError("Flashlight not found as child of guard! Please ensure there's a child object named 'Flashlight'"); }
     }
-
-
-    // void MoveTowardsTarget(float speed, Vector3 targetPt) {
-    //     transform.position = Vector3.MoveTowards(transform.position,
-    //                                            targetPt,
-    //                                            speed * Time.deltaTime);
-    // }
-
-    // void RotateTowardsTarget(Vector3 dir) {
-    //     float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-    //     Quaternion targetRotation = Quaternion.Euler(0, 0, angle + 90);
-    //     transform.rotation = Quaternion.RotateTowards(transform.rotation,
-    //                                                 targetRotation,
-    //                                                 rotationSpeed * Time.deltaTime);
-    // }
+    
     void Update()
     {
         if (worldPatrolPoints.Count <= 1) return;
