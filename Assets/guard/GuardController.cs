@@ -47,7 +47,7 @@ public class Guard : MonoBehaviour
         flashlight = transform.Find("Flashlight");
         if (flashlight == null){ Debug.LogError("Flashlight not found as child of guard! Please ensure there's a child object named 'Flashlight'"); }
     }
-    
+
     void Update()
     {
         if (worldPatrolPoints.Count <= 1) return;
@@ -79,6 +79,7 @@ public class Guard : MonoBehaviour
         // Check if reached target point
         if (Vector3.Distance(transform.position, targetPoint) == 0f)
         {
+            //walkPath();
             if (loopPatrol)
             {
                 currentPoint = (currentPoint + 1) % worldPatrolPoints.Count;
@@ -87,25 +88,87 @@ public class Guard : MonoBehaviour
             {
                 if (isMovingForward)
                 {
-                    currentPoint++;
-                    if (currentPoint >= worldPatrolPoints.Count - 1)
-                    {
-                        currentPoint = worldPatrolPoints.Count - 1;
-                        isMovingForward = false;
-                    }
+                    // currentPoint++;
+                    // if (currentPoint >= worldPatrolPoints.Count - 1)
+                    // {
+                    //     currentPoint = worldPatrolPoints.Count - 1;
+                    //     isMovingForward = false;
+                    // }
+                    walkPathForward();
                 }
                 else
                 {
-                    currentPoint--;
-                    if (currentPoint <= 0)
-                    {
-                        currentPoint = 0;
-                        isMovingForward = true;
-                    }
+                    // currentPoint--;
+                    // if (currentPoint <= 0)
+                    // {
+                    //     currentPoint = 0;
+                    //     isMovingForward = true;
+                    // }
+                    walkPathBackward();
                 }
             }
         }
     }
+
+void walkPathForward() {
+    // currentPoint++;
+    // if (currentPoint >= worldPatrolPoints.Count - 1)
+    // {
+    //     // currentPoint = worldPatrolPoints.Count - 1;
+    //     // isMovingForward = false;
+    //     currentPoint = 0;
+    //     walkPathForward();
+    //     // currentPoint = currentPoint % worldPatrolPoints.Count;
+    //     // isMovingForward = false;
+    // }
+    // if (currentPoint == worldPatrolPoints.Count - 1) {
+    //     currentPoint = 0;
+    // } else {
+    //     currentPoint++;
+    // }
+    currentPoint = (currentPoint + 1) % worldPatrolPoints.Count;
+}
+
+void walkPathBackward() {
+    // currentPoint--;
+    // if (currentPoint <= 0)
+    // {
+    //     // currentPoint = 0;
+    //     // isMovingForward = true;
+    //     currentPoint = worldPatrolPoints.Count;
+    //     walkPathBackward();
+    //     // currentPoint = currentPoint % worldPatrolPoints.Count;
+    //     // isMovingForward = true;
+    // }
+    // if (currentPoint == 0) {
+    //     currentPoint = worldPatrolPoints.Count - 1;
+    // } else {
+    //     currentPoint--;
+    // }
+    if (currentPoint == 0) {
+        currentPoint = worldPatrolPoints.Count - 1;
+    } else {
+        currentPoint = currentPoint - 1;
+    }
+}
+
+void OnTriggerEnter2D(Collider2D other) {
+    Debug.Log("collision detected");
+    if (other.gameObject.tag == "Box") {
+        Debug.Log("box collision detected");
+        //currentPoint--;
+        if (isMovingForward) {
+            //currentPoint--;
+            //isMovingForward = false;
+            walkPathBackward();
+        } else if (!isMovingForward) {
+            //currentPoint++;
+            //isMovingForward = true;
+            walkPathForward();
+        }
+        isMovingForward = !isMovingForward;
+    }
+}
 
 void OnDrawGizmosSelected()
 {
