@@ -177,6 +177,7 @@ private void activateTile()
       else if (Mathf.Abs(input.x) > 0.01f && Mathf.Abs(input.y) > 0.01f)
       {
         pulling = false; //so box does not go with the player
+        pushing = false;
         if (Mathf.Abs(lastDirection.x) == 1)
         {
           if (input.y > 0.01f)
