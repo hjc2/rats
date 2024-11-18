@@ -45,7 +45,7 @@ public class FlashlightRaycast : MonoBehaviour
 
         if (hit.collider != null) 
         { 
-            // Debug.Log("Raycast hit: " + hit.collider.name);
+            //Debug.Log("Raycast hit: " + hit.collider.name);
             if (hit.collider.CompareTag("Player"))
             {
                 Debug.Log("Player detected in light beam");
