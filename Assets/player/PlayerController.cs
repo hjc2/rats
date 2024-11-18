@@ -126,7 +126,7 @@ private void activateTile()
 
     void OnMove(InputValue value) {
 
-      Debug.Log("moving!");
+      //Debug.Log("moving!");
       if(value.Get() != null) { //start to move
         moving = true; //toggle moving
       }

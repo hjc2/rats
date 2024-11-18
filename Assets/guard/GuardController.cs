@@ -16,7 +16,6 @@ public class Guard : MonoBehaviour
     private bool isMovingForward = true;
     private Vector2 startPosition;
     private List<Vector3> worldPatrolPoints = new List<Vector3>(); // Absolute locations for patrol
-    //private bool isRotating = false;
 
     void Start()
     {
@@ -49,20 +48,6 @@ public class Guard : MonoBehaviour
         if (flashlight == null){ Debug.LogError("Flashlight not found as child of guard! Please ensure there's a child object named 'Flashlight'"); }
     }
 
-
-    // void MoveTowardsTarget(float speed, Vector3 targetPt) {
-    //     transform.position = Vector3.MoveTowards(transform.position,
-    //                                            targetPt,
-    //                                            speed * Time.deltaTime);
-    // }
-
-    // void RotateTowardsTarget(Vector3 dir) {
-    //     float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-    //     Quaternion targetRotation = Quaternion.Euler(0, 0, angle + 90);
-    //     transform.rotation = Quaternion.RotateTowards(transform.rotation,
-    //                                                 targetRotation,
-    //                                                 rotationSpeed * Time.deltaTime);
-    // }
     void Update()
     {
         if (worldPatrolPoints.Count <= 1) return;
@@ -102,25 +87,46 @@ public class Guard : MonoBehaviour
             {
                 if (isMovingForward)
                 {
-                    currentPoint++;
-                    if (currentPoint >= worldPatrolPoints.Count - 1)
-                    {
-                        currentPoint = worldPatrolPoints.Count - 1;
-                        isMovingForward = false;
-                    }
+                    walkPathForward();
                 }
                 else
                 {
-                    currentPoint--;
-                    if (currentPoint <= 0)
-                    {
-                        currentPoint = 0;
-                        isMovingForward = true;
-                    }
+                    walkPathBackward();
                 }
             }
         }
     }
+
+void walkPathForward() {
+    currentPoint = (currentPoint + 1) % worldPatrolPoints.Count;
+}
+
+void walkPathBackward() {
+    if (currentPoint == 0) {
+        currentPoint = worldPatrolPoints.Count - 1;
+    } else {
+        currentPoint = currentPoint - 1;
+    }
+}
+
+void getNextPoint() {
+    if (isMovingForward) { // if walking the path forward
+        if (currentPoint == 0) {
+            currentPoint = worldPatrolPoints.Count - 1; // if at point 0, turn around and jump to end of list
+        } else {
+            currentPoint--; // if not at point 0, turn around and move one towards beginning of list
+        }
+    } else if (!isMovingForward) { // if walking the path backwards
+        currentPoint = (currentPoint + 1) % worldPatrolPoints.Count; // turn around and move one towards end of list
+    }
+}
+
+void OnTriggerEnter2D(Collider2D other) {
+    if (other.gameObject.tag == "Box") { // if guard collides with a box
+        getNextPoint(); // get next target point
+        isMovingForward = !isMovingForward; // change movement direction
+    }
+}
 
 void OnDrawGizmosSelected()
 {
