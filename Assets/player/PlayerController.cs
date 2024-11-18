@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed;
+    private float speed = 5f;
     public Vector3 respawnPoint;
     private Vector2 currentInput;
     private Vector2 movementDirection;
@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private bool pushing = false;
     private GameObject result;
     private bool moving = false;
+    private Vector2 lastDirection = Vector2.zero;
 
 
     private void Awake() {
@@ -44,43 +45,41 @@ public class PlayerController : MonoBehaviour
               if(!Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movementDirection.x, 2*movementDirection.y, 0f), 0.1f, UnwalkableLayer) &&
                  !Physics2D.OverlapCircle(targetPosition.position + new Vector3(2*movementDirection.x, 2*movementDirection.y, 0f), 0.1f, MoveableLayer)) {//can't push box through wall
                   pushing = true;
+                  //Debug.Log("push");
                   result = findBox(transform.position, movementDirection); //CHANGED
                   targetPosition.position = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y, 0f);
               }
             } else if(Physics2D.OverlapCircle(transform.position + new Vector3(-movementDirection.x, -movementDirection.y, 0f), 0.1f, MoveableLayer) && shift) {
               //if a box is in the opposite direction that the player is moving and shift is held
               pulling = true;
+              //Debug.Log("pull");
               targetPosition.position = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y, 0f);
               result = findBox(transform.position, movementDirection);
-              //result.transform.position = new Vector3(targetPosition.position.x - movementDirection.x, 0, 0f);
-              //transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, speed * Time.deltaTime);
             } else {
               pushing = false;
+              pulling = false;
+              //Debug.Log("OFF");
               targetPosition.position = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y, 0f);
             }
          }
 
-
-         if(pulling && moving) {
-          boxTarget = new Vector3(targetPosition.position.x - movementDirection.x, targetPosition.position.y - movementDirection.y);
-          //result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
-         }
-         else if(pushing && moving) {
-          //result = findBox(transform.position);
+         if(pushing && moving) {
+          Debug.Log(boxTarget);
           boxTarget = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y);
-          //result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
          }
-         
+         else if(pulling && moving) {
+          Debug.Log(boxTarget);
+          boxTarget = new Vector3(targetPosition.position.x - movementDirection.x, targetPosition.position.y - movementDirection.y);
+         }
+
          if(result != null){
           result.transform.position = Vector3.MoveTowards(result.transform.position, boxTarget, speed * Time.deltaTime);
          }
+
          transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, speed * Time.deltaTime);
-      //transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, speed * Time.deltaTime);
-      //transform.Translate(Vector3.Normalize(movementDirection) * speed * Time.deltaTime);
     }
 
     private GameObject findBox(Vector2 position, Vector2 direction) {
-      Debug.Log(direction);
       Collider2D [] results = Physics2D.OverlapBoxAll(position, toSquare(direction), 0f);
       bool found = false;
       int i = 0;
@@ -124,8 +123,6 @@ private void activateTile()
     }
 
     void OnMove(InputValue value) {
-
-      Debug.Log("moving!");
       if(value.Get() != null) { //start to move
         moving = true; //toggle moving
       }
@@ -138,31 +135,69 @@ private void activateTile()
 
     Vector2 GetDirection(Vector2 input)
     {
-      Vector2 finalDirection = Vector2.zero;
-            if (input.y > 0.01f)
-            {
-                //lastDirection = "Up";
-                finalDirection = new Vector2(0, 1);
-            }
-            else if (input.y < -0.01f)
-            {
-                //lastDirection = "Down";
-                finalDirection = new Vector2(0, -1);
-            }
-            else if (input.x > 0.01f)
-            {
-                //lastDirection = "Right";
-                finalDirection = new Vector2(1, 0);
-            }
-            else if (input.x < -0.01f)
-            {
-                //lastDirection = "Left";
-                finalDirection = new Vector2(-1, 0);
-            }
-            else
-                finalDirection = Vector2.zero;
-
-            return finalDirection;
+      if (input == new Vector2(0, 1))
+      {
+        lastDirection = input;
+        return input;
+      }
+      else if (input == new Vector2(0, -1))
+      {
+        lastDirection = input;
+        return input;
+      }
+      else if (input == new Vector2(1, 0))
+      {
+        lastDirection = input;
+        return input;
+      }
+      else if (input == new Vector2(-1, 0))
+      {
+        lastDirection = input;
+        return input;
+      }
+      else if (Mathf.Abs(input.x) > 0.01f && Mathf.Abs(input.y) > 0.01f)
+      {
+        pulling = false; //so box does not go with the player
+        pushing = false;
+        if (Mathf.Abs(lastDirection.x) == 1)
+        {
+          if (input.y > 0.01f)
+          {
+            return new Vector2(0, 1);
+          }
+          else if (input.y < -0.01f)
+          {
+            return new Vector2(0, -1);
+          }
+          else
+          {
+            return Vector2.zero;
+          }
+        }
+        else if (Mathf.Abs(lastDirection.y) == 1)
+        {
+          if (input.x > 0.01f)
+          {
+            return new Vector2(1, 0);
+          }
+          else if (input.x < -0.01f)
+          {
+            return new Vector2(-1, 0);
+          }
+          else 
+          {
+            return Vector2.zero;
+          }
+        }
+        else
+        {
+          return Vector2.zero;
+        }
+      }
+      else
+      {
+        return Vector2.zero;
+      }
     }
 
     void OnPull(InputValue value) {
@@ -180,15 +215,32 @@ private void activateTile()
       }
     }
 
-    public void ResetPlayerPosition()
-    {
-      transform.position = respawnPoint;
-      targetPosition.position = respawnPoint;
-    }
+    // public void ResetPlayerPosition()
+    // {
+    //   transform.position = respawnPoint;
+    //   targetPosition.position = respawnPoint;
+  
+    //   foreach (GameObject switchObj in GameObject.FindGameObjectsWithTag("switch"))
+    //   {
+    //       if (switchObj.TryGetComponent<SwitchController>(out var controller))
+    //       {
+    //           controller.ResetToOriginal();
+    //       }
+    //   }
+    // }
 
     void OnTriggerEnter2D(Collider2D other) {
       if (other.gameObject.tag == "staticLight") {
         ResetPlayerPosition();
       }
+      if(other.gameObject.tag == "Box") {
+        Debug.Log("Inside");
+      }
     }
+}
+    // void OnTriggerEnter2D(Collider2D other) {
+    //   if (other.gameObject.tag == "staticLight") {
+    //     ResetPlayerPosition();
+    //   }
+    // }
 }
