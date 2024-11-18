@@ -242,23 +242,23 @@ private void activateTile()
       }
     }
 
-    public void ResetPlayerPosition()
-    {
-      transform.position = respawnPoint;
-      targetPosition.position = respawnPoint;
+    // public void ResetPlayerPosition()
+    // {
+    //   transform.position = respawnPoint;
+    //   targetPosition.position = respawnPoint;
   
-      foreach (GameObject switchObj in GameObject.FindGameObjectsWithTag("switch"))
-      {
-          if (switchObj.TryGetComponent<SwitchController>(out var controller))
-          {
-              controller.ResetToOriginal();
-          }
-      }
-    }
+    //   foreach (GameObject switchObj in GameObject.FindGameObjectsWithTag("switch"))
+    //   {
+    //       if (switchObj.TryGetComponent<SwitchController>(out var controller))
+    //       {
+    //           controller.ResetToOriginal();
+    //       }
+    //   }
+    // }
 
-    void OnTriggerEnter2D(Collider2D other) {
-      if (other.gameObject.tag == "staticLight") {
-        ResetPlayerPosition();
-      }
-    }
+    // void OnTriggerEnter2D(Collider2D other) {
+    //   if (other.gameObject.tag == "staticLight") {
+    //     ResetPlayerPosition();
+    //   }
+    // }
 }

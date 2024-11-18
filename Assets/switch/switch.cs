@@ -127,7 +127,7 @@ public class SwitchController : MonoBehaviour
                     {
                         behaviour.enabled = !behaviour.enabled;
                         childStatus = behaviour.enabled;
-                        Debug.Log("Behaviour: " + behaviour.enabled);
+                        Debug.Log(light.name + ": Behaviour: " + behaviour.enabled);
                     }
                     else if (component is Renderer renderer)
                     {
