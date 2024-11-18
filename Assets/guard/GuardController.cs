@@ -79,7 +79,6 @@ public class Guard : MonoBehaviour
         // Check if reached target point
         if (Vector3.Distance(transform.position, targetPoint) == 0f)
         {
-            //walkPath();
             if (loopPatrol)
             {
                 currentPoint = (currentPoint + 1) % worldPatrolPoints.Count;
@@ -88,22 +87,10 @@ public class Guard : MonoBehaviour
             {
                 if (isMovingForward)
                 {
-                    // currentPoint++;
-                    // if (currentPoint >= worldPatrolPoints.Count - 1)
-                    // {
-                    //     currentPoint = worldPatrolPoints.Count - 1;
-                    //     isMovingForward = false;
-                    // }
                     walkPathForward();
                 }
                 else
                 {
-                    // currentPoint--;
-                    // if (currentPoint <= 0)
-                    // {
-                    //     currentPoint = 0;
-                    //     isMovingForward = true;
-                    // }
                     walkPathBackward();
                 }
             }
@@ -111,40 +98,10 @@ public class Guard : MonoBehaviour
     }
 
 void walkPathForward() {
-    // currentPoint++;
-    // if (currentPoint >= worldPatrolPoints.Count - 1)
-    // {
-    //     // currentPoint = worldPatrolPoints.Count - 1;
-    //     // isMovingForward = false;
-    //     currentPoint = 0;
-    //     walkPathForward();
-    //     // currentPoint = currentPoint % worldPatrolPoints.Count;
-    //     // isMovingForward = false;
-    // }
-    // if (currentPoint == worldPatrolPoints.Count - 1) {
-    //     currentPoint = 0;
-    // } else {
-    //     currentPoint++;
-    // }
     currentPoint = (currentPoint + 1) % worldPatrolPoints.Count;
 }
 
 void walkPathBackward() {
-    // currentPoint--;
-    // if (currentPoint <= 0)
-    // {
-    //     // currentPoint = 0;
-    //     // isMovingForward = true;
-    //     currentPoint = worldPatrolPoints.Count;
-    //     walkPathBackward();
-    //     // currentPoint = currentPoint % worldPatrolPoints.Count;
-    //     // isMovingForward = true;
-    // }
-    // if (currentPoint == 0) {
-    //     currentPoint = worldPatrolPoints.Count - 1;
-    // } else {
-    //     currentPoint--;
-    // }
     if (currentPoint == 0) {
         currentPoint = worldPatrolPoints.Count - 1;
     } else {
@@ -152,21 +109,22 @@ void walkPathBackward() {
     }
 }
 
-void OnTriggerEnter2D(Collider2D other) {
-    Debug.Log("collision detected");
-    if (other.gameObject.tag == "Box") {
-        Debug.Log("box collision detected");
-        //currentPoint--;
-        if (isMovingForward) {
-            //currentPoint--;
-            //isMovingForward = false;
-            walkPathBackward();
-        } else if (!isMovingForward) {
-            //currentPoint++;
-            //isMovingForward = true;
-            walkPathForward();
+void getNextPoint() {
+    if (isMovingForward) { // if walking the path forward
+        if (currentPoint == 0) {
+            currentPoint = worldPatrolPoints.Count - 1; // if at point 0, turn around and jump to end of list
+        } else {
+            currentPoint--; // if not at point 0, turn around and move one towards beginning of list
         }
-        isMovingForward = !isMovingForward;
+    } else if (!isMovingForward) { // if walking the path backwards
+        currentPoint = (currentPoint + 1) % worldPatrolPoints.Count; // turn around and move one towards end of list
+    }
+}
+
+void OnTriggerEnter2D(Collider2D other) {
+    if (other.gameObject.tag == "Box") { // if guard collides with a box
+        getNextPoint(); // get next target point
+        isMovingForward = !isMovingForward; // change movement direction
     }
 }
 
