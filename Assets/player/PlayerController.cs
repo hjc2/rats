@@ -229,18 +229,17 @@ private void activateTile()
     //   }
     // }
 
-    void OnTriggerEnter2D(Collider2D other) {
-      if (other.gameObject.tag == "staticLight") {
-        ResetPlayerPosition();
-      }
-      if(other.gameObject.tag == "Box") {
-        Debug.Log("Inside");
-      }
-    }
+    // void OnTriggerEnter2D(Collider2D other) {
+    //   if (other.gameObject.tag == "staticLight") {
+    //     ResetPlayerPosition();
+    //   }
+    //   if(other.gameObject.tag == "Box") {
+    //     Debug.Log("Inside");
+    //   }
+    // }
 }
     // void OnTriggerEnter2D(Collider2D other) {
     //   if (other.gameObject.tag == "staticLight") {
     //     ResetPlayerPosition();
     //   }
     // }
-}
