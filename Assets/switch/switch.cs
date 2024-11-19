@@ -13,7 +13,6 @@ public class SwitchController : MonoBehaviour
     private Color brightYellow = new Color(1f, 1f, 0f);      // Bright yellow
     private Color darkYellow = new Color(0.1f, 0.2f, 0.1f);    // Dark yellow
 
-
     public void ToggleState()
     {
         isActivated = !isActivated;
@@ -32,34 +31,37 @@ public class SwitchController : MonoBehaviour
             Component[] parentComponents = light.GetComponents<Component>();
             
             bool childStatus = false;
-            // Disable all components on the parent except Transform
-            foreach (Component component in parentComponents)
-            {
-                if (!(component is Transform))
+
+            var behaviours = light.GetComponents<Behaviour>();
+            var renderer = light.GetComponent<Renderer>();
+            var collider = light.GetComponent<Collider>();
+
+            bool newState = false;
+            
+            // Toggle all Behaviour components except Transform
+            foreach (var behaviour in behaviours)
+            {   
+                if (!(behaviour is Transform))
                 {
-                    if (component is Behaviour behaviour)
-                    {
-                        behaviour.enabled = !behaviour.enabled;
-                        childStatus = behaviour.enabled;
-                        Debug.Log(light.name + ": Behaviour: " + behaviour.enabled);
-                    }
-                    else if (component is Renderer renderer)
-                    {
-                        renderer.enabled = !renderer.enabled;
-                        childStatus = renderer.enabled;
-                        Debug.Log("render: " + renderer.enabled);
-                    }
-                    else if (component is Collider collider)
-                    {
-                        Debug.Log("collider: " + collider.enabled);
-                        collider.enabled = !collider.enabled;
-                        childStatus = collider.enabled;
-                    }
+                    behaviour.enabled = !behaviour.enabled;
+                    newState = behaviour.enabled;
                 }
             }
+    
+            if (renderer != null)
+            {
+                renderer.enabled = !renderer.enabled;
+                newState = renderer.enabled;
+            }
+            
+            if (collider != null)
+            {
+                collider.enabled = !collider.enabled;
+                newState = collider.enabled;
+            }
+            
+            UpdateChildColors(light, newState);
 
-            // Update all child renderers' colors
-            UpdateChildColors(light, childStatus);
         }
     }
 
@@ -97,19 +99,13 @@ public class SwitchController : MonoBehaviour
     private void LightImages()
     {
         controlledLights.RemoveAll(light => light == null);
-        
+
         foreach (GameObject light in controlledLights)
         {
-            Component[] parentComponents = light.GetComponents<Component>();
-            
-            bool childStatus = false;
-            foreach (Component component in parentComponents)
+            var behaviour = light.GetComponent<Behaviour>();
+            if (behaviour != null)
             {
-                if (component is Behaviour behaviour)
-                {
-                    childStatus = behaviour.enabled;
-                    UpdateChildColors(light, childStatus);
-                }
+                UpdateChildColors(light, behaviour.enabled);
             }
         }
     }
