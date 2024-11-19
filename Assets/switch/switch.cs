@@ -61,7 +61,6 @@ public class SwitchController : MonoBehaviour
             }
             
             UpdateChildColors(light, newState);
-
         }
     }
 
