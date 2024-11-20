@@ -12,6 +12,7 @@ public class SwitchController : MonoBehaviour
 
     private Color brightYellow = new Color(1f, 1f, 0f);      // Bright yellow
     private Color darkYellow = new Color(0.1f, 0.2f, 0.1f);    // Dark yellow
+    public int waitTime = 5;
 
     public void ToggleState()
     {
@@ -106,6 +107,15 @@ public class SwitchController : MonoBehaviour
             {
                 UpdateChildColors(light, behaviour.enabled);
             }
+            if (light.GetComponent<RoundlightRaycast>().isTimed) {
+                StartCoroutine(lightTimer());
+            }
         }
+    }
+
+    IEnumerator lightTimer() {
+        ToggleState();
+        yield return new WaitForSeconds(waitTime);
+        ToggleState();
     }
 }

@@ -8,6 +8,8 @@ public class RoundlightRaycast : MonoBehaviour
     private Transform player;
     public LayerMask obstacleMask; // Layer mask for obstacles (e.g., walls)
     private UnityEngine.Rendering.Universal.Light2D light2D;
+    public bool isTimed = false;
+    public int waitTime = 5;
 
     // Start is called before the first frame update
     void Start()
@@ -57,5 +59,11 @@ public class RoundlightRaycast : MonoBehaviour
         { 
             // Debug.Log("No collision detected.");
         }
+    }
+
+    IEnumerator lightTimer() {
+        light2D.enabled = false;
+        yield return new WaitForSeconds(waitTime);
+        light2D.enabled = true;
     }
 }
