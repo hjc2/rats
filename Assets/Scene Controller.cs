@@ -25,4 +25,10 @@ public class SceneController : MonoBehaviour
     {
       return (int) (a - b * Mathf.Floor(a / b));
     }
+
+    void OnTriggerEnter2D(Collider2D other) {
+      if (other.gameObject.tag == "Player") {
+        SceneManager.LoadScene(6, LoadSceneMode.Single);
+      }
+    }
 }
