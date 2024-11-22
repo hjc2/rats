@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Default Level.unity
+    guid: c8f17f2668d5f4528834e129146486d2
+  - enabled: 1
     path: Assets/Scenes/boxMovement.unity
     guid: 57762294c6e9c41b3a89621c8b3a67b4
   - enabled: 1
@@ -20,5 +23,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/lights.unity
     guid: 1670adaaf56aeb94188cf0338fc16a1e
+  - enabled: 1
+    path: Assets/Scenes/Win.unity
+    guid: d7451f1a746ca4ab0b80eaf24af2bc99
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 64eee119c20532b40932eeca4705113b, type: 2}

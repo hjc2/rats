@@ -12,98 +12,17 @@ public class SwitchController : MonoBehaviour
 
     private Color brightYellow = new Color(1f, 1f, 0f);      // Bright yellow
     private Color darkYellow = new Color(0.1f, 0.2f, 0.1f);    // Dark yellow
-
-    // Dictionary to store original states of components
-    private Dictionary<Component, bool> originalStates = new Dictionary<Component, bool>();
-    private Dictionary<Renderer, Color> originalColors = new Dictionary<Renderer, Color>();
-
-    private void Start()
-    {
-        StoreOriginalStates();
-    }
-
-    private void StoreOriginalStates()
-    {
-        originalStates.Clear();
-        originalColors.Clear();
-
-        foreach (GameObject light in controlledLights)
-        {
-            if (light == null) continue;
-
-            // Store states of parent components
-            Component[] parentComponents = light.GetComponents<Component>();
-            foreach (Component component in parentComponents)
-            {
-                if (component is Behaviour behaviour)
-                {
-                    originalStates[component] = behaviour.enabled;
-                }
-                else if (component is Renderer renderer)
-                {
-                    originalStates[component] = renderer.enabled;
-                }
-                else if (component is Collider collider)
-                {
-                    originalStates[component] = collider.enabled;
-                }
-            }
-
-            // Store states and colors of child renderers
-            Renderer[] childRenderers = light.GetComponentsInChildren<Renderer>(true);
-            foreach (Renderer renderer in childRenderers)
-            {
-                if (renderer.gameObject != light)
-                {
-                    if (renderer is SpriteRenderer spriteRenderer)
-                    {
-                        originalColors[renderer] = spriteRenderer.color;
-                    }
-                }
-            }
-        }
-    }
-
-    public void ResetToOriginal()
-    {
-        foreach (var kvp in originalStates)
-        {
-            Component component = kvp.Key;
-            bool originalState = kvp.Value;
-
-            if (component is Behaviour behaviour)
-            {
-                behaviour.enabled = originalState;
-            }
-            else if (component is Renderer renderer)
-            {
-                renderer.enabled = originalState;
-            }
-            else if (component is Collider collider)
-            {
-                collider.enabled = originalState;
-            }
-        }
-
-        foreach (var kvp in originalColors)
-        {
-            Renderer renderer = kvp.Key;
-            Color originalColor = kvp.Value;
-
-            if (renderer is SpriteRenderer spriteRenderer)
-            {
-                spriteRenderer.color = originalColor;
-            }
-        }
-
-        // Reset the activation state to match the original state
-        isActivated = true;
-    }
+    public bool isTimed = false;
+    public float waitTime = 5f;
 
     public void ToggleState()
     {
-        isActivated = !isActivated;
-        UpdateLights();
+        if (isTimed) {
+            StartCoroutine(lightTimer());
+        } else {
+            isActivated = !isActivated;
+            UpdateLights();
+        }
     }
 
     private void UpdateLights()
@@ -118,40 +37,41 @@ public class SwitchController : MonoBehaviour
             Component[] parentComponents = light.GetComponents<Component>();
             
             bool childStatus = false;
-            // Disable all components on the parent except Transform
-            foreach (Component component in parentComponents)
-            {
-                if (!(component is Transform))
+
+            var behaviours = light.GetComponents<Behaviour>();
+            var renderer = light.GetComponent<Renderer>();
+            var collider = light.GetComponent<Collider>();
+
+            bool newState = false;
+            
+            // Toggle all Behaviour components except Transform
+            foreach (var behaviour in behaviours)
+            {   
+                if (!(behaviour is Transform))
                 {
-                    if (component is Behaviour behaviour)
-                    {
-                        behaviour.enabled = !behaviour.enabled;
-                        childStatus = behaviour.enabled;
-                        Debug.Log(light.name + ": Behaviour: " + behaviour.enabled);
-                    }
-                    else if (component is Renderer renderer)
-                    {
-                        renderer.enabled = !renderer.enabled;
-                        childStatus = renderer.enabled;
-                        Debug.Log("render: " + renderer.enabled);
-                    }
-                    else if (component is Collider collider)
-                    {
-                        Debug.Log("collider: " + collider.enabled);
-                        collider.enabled = !collider.enabled;
-                        childStatus = collider.enabled;
-                    }
+                    behaviour.enabled = !behaviour.enabled;
+                    newState = behaviour.enabled;
                 }
             }
-
-            // Update all child renderers' colors
-            UpdateChildColors(light, childStatus);
+    
+            if (renderer != null)
+            {
+                renderer.enabled = !renderer.enabled;
+                newState = renderer.enabled;
+            }
+            
+            if (collider != null)
+            {
+                collider.enabled = !collider.enabled;
+                newState = collider.enabled;
+            }
+            
+            UpdateChildColors(light, newState);
         }
     }
 
     private void UpdateChildColors(GameObject parent, bool lightStatus)
     {
-        // Get all renderers in children
         Renderer[] childRenderers = parent.GetComponentsInChildren<Renderer>(true);
         foreach (Renderer renderer in childRenderers)
         {
@@ -184,20 +104,24 @@ public class SwitchController : MonoBehaviour
     private void LightImages()
     {
         controlledLights.RemoveAll(light => light == null);
-        
+
         foreach (GameObject light in controlledLights)
         {
-            Component[] parentComponents = light.GetComponents<Component>();
-            
-            bool childStatus = false;
-            foreach (Component component in parentComponents)
+            var behaviour = light.GetComponent<Behaviour>();
+            if (behaviour != null)
             {
-                if (component is Behaviour behaviour)
-                {
-                    childStatus = behaviour.enabled;
-                    UpdateChildColors(light, childStatus);
-                }
+                UpdateChildColors(light, behaviour.enabled);
             }
         }
+    }
+
+    IEnumerator lightTimer() {
+        isActivated = !isActivated;
+        UpdateLights();
+        LightImages();
+        yield return new WaitForSeconds(waitTime);
+        isActivated = !isActivated;
+        UpdateLights();
+        LightImages();
     }
 }

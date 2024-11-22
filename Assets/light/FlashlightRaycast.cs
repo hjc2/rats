@@ -66,4 +66,20 @@ public class FlashlightRaycast : MonoBehaviour
         //     Debug.Log("Player not detected or obstacle in the way");
         // }
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Box"))
+        {
+            light2D.enabled = false;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Box"))
+        {
+            light2D.enabled = true;
+        }
+    }
 }
