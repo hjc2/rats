@@ -58,4 +58,21 @@ public class RoundlightRaycast : MonoBehaviour
             // Debug.Log("No collision detected.");
         }
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Box") && light2D != null)
+        {
+            light2D.enabled = false;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Box") && light2D != null)
+        {
+            light2D.enabled = true;
+        }
+    }
+    
 }
