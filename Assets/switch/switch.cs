@@ -12,11 +12,17 @@ public class SwitchController : MonoBehaviour
 
     private Color brightYellow = new Color(1f, 1f, 0f);      // Bright yellow
     private Color darkYellow = new Color(0.1f, 0.2f, 0.1f);    // Dark yellow
+    public bool isTimed = false;
+    public float waitTime = 5f;
 
     public void ToggleState()
     {
-        isActivated = !isActivated;
-        UpdateLights();
+        if (isTimed) {
+            StartCoroutine(lightTimer());
+        } else {
+            isActivated = !isActivated;
+            UpdateLights();
+        }
     }
 
     private void UpdateLights()
@@ -107,5 +113,15 @@ public class SwitchController : MonoBehaviour
                 UpdateChildColors(light, behaviour.enabled);
             }
         }
+    }
+
+    IEnumerator lightTimer() {
+        isActivated = !isActivated;
+        UpdateLights();
+        LightImages();
+        yield return new WaitForSeconds(waitTime);
+        isActivated = !isActivated;
+        UpdateLights();
+        LightImages();
     }
 }
