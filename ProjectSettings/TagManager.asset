@@ -9,6 +9,7 @@ TagManager:
   - Box
   - switch
   - staticLight
+  - Audio
   layers:
   - Default
   - TransparentFX

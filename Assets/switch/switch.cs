@@ -15,11 +15,22 @@ public class SwitchController : MonoBehaviour
     public bool isTimed = false;
     public float waitTime = 5f;
 
+    private AudioManager audioManager;
+
+    void Start()
+    {
+        // Find AudioManager
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     public void ToggleState()
     {
         if (isTimed) {
+            audioManager.PlaySFX(audioManager.button);
+            audioManager.PlayTimer(waitTime);
             StartCoroutine(lightTimer());
         } else {
+            audioManager.PlaySFX(audioManager.lightSwitch);
             isActivated = !isActivated;
             UpdateLights();
         }
