@@ -2183,7 +2183,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 663363201}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 671567216}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: AdvanceScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &663363201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2235,6 +2247,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates: []
+--- !u!1 &671567215
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 671567217}
+  - component: {fileID: 671567216}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: GameManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &671567216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671567215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683be843a30cb424c85a2f334b11481a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &671567217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671567215}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.8475623, y: 0.8942746, z: -0.7620885}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &686247193
 GameObject:
   m_ObjectHideFlags: 0
@@ -5823,10 +5879,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicSource: {fileID: 197210157}
   sfxSource: {fileID: 794947244}
-  background: {fileID: 8300000, guid: 3db58dd52295f42d8b1616a626a61b5d, type: 3}
+  menu: {fileID: 8300000, guid: 68a68cd618148448781ca8006e6c6139, type: 3}
+  level: {fileID: 8300000, guid: 0c719f1dc0a754cf3ac92da41ce2cf63, type: 3}
+  celebrate: {fileID: 8300000, guid: 29bcdec380ac64f2c9f60f4edf57f4ea, type: 3}
+  credits: {fileID: 8300000, guid: a9cbb068e11b84ad59108a87c26b7121, type: 3}
   squeak: {fileID: 8300000, guid: d9749a9b3ec16477db3f8fb2e3b4d1bd, type: 3}
-  button: {fileID: 8300000, guid: 10ea23c7f9f5d4a769f5568f9f285660, type: 3}
-  lightSwitch: {fileID: 8300000, guid: 0ff3614eb3e13409b99af0192876450d, type: 3}
+  button: {fileID: 8300000, guid: 5c4f35e90550a48288522ca18b0c16b5, type: 3}
+  lightSwitch: {fileID: 8300000, guid: bddb01dfb22f64a43acff11a44af6622, type: 3}
   timer: {fileID: 8300000, guid: 76df8a69876c8416682e59a50f5309a2, type: 3}
 --- !u!4 &2004636182
 Transform:
@@ -5890,3 +5949,4 @@ SceneRoots:
   - {fileID: 1899388286}
   - {fileID: 2004636182}
   - {fileID: 437563694}
+  - {fileID: 671567217}

@@ -10,6 +10,7 @@ TagManager:
   - switch
   - staticLight
   - Audio
+  - GameManager
   layers:
   - Default
   - TransparentFX
