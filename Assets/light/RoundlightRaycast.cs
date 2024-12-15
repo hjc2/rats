@@ -58,7 +58,7 @@ public class RoundlightRaycast : MonoBehaviour
                 audioManager.PlaySFX(audioManager.squeak);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             } 
-            else if (hits[0].collider.CompareTag("switch") && hits[1].collider.CompareTag("Player"))
+            else if ( hits.Length > 1 && hits[0].collider.CompareTag("switch") && hits[1].collider.CompareTag("Player"))
             {
                 Debug.Log("Player detected in round light");
                 audioManager.PlaySFX(audioManager.squeak);

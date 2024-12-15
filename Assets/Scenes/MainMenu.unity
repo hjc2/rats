@@ -2437,7 +2437,7 @@ GameObject:
   - component: {fileID: 784978451}
   - component: {fileID: 784978450}
   m_Layer: 5
-  m_Name: QuitTxt
+  m_Name: CreditsTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2482,7 +2482,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Quit
+  m_text: Credits
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f7dc854293c7a45188e08f392006b8c9, type: 2}
   m_sharedMaterial: {fileID: -8610253266587363750, guid: f7dc854293c7a45188e08f392006b8c9, type: 2}
@@ -4275,7 +4275,6 @@ GameObject:
   - component: {fileID: 1271280482}
   - component: {fileID: 1271280481}
   - component: {fileID: 1271280485}
-  - component: {fileID: 1271280486}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4385,18 +4384,6 @@ MonoBehaviour:
   resolutionDropdown: {fileID: 0}
   qualityDropdown: {fileID: 845347651}
   fullscreen: {fileID: 983683971}
---- !u!114 &1271280486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1271280480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fa4dca33fdff451db957d616f6ea7a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1308132999
 GameObject:
   m_ObjectHideFlags: 0
@@ -5042,7 +5029,7 @@ GameObject:
   - component: {fileID: 1425875164}
   - component: {fileID: 1425875163}
   m_Layer: 5
-  m_Name: QuitBtn
+  m_Name: CreditsBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5125,9 +5112,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1271280486}
-        m_TargetAssemblyTypeName: MainMenuHandler, Assembly-CSharp
-        m_MethodName: QuitGame
+      - m_Target: {fileID: 671567216}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: GoToCredits
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

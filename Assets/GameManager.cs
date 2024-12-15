@@ -40,6 +40,12 @@ public class GameManager : MonoBehaviour
                 audioManager.musicSource.clip = audioManager.credits;
                 audioManager.musicSource.Play();
             }
+            else if (index == numScenes - 2)
+            {
+                audioManager.musicSource.clip = audioManager.celebrate;
+                audioManager.musicSource.Play();
+                GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>().Play("player_dance");
+            }
             else
             {
                 if (audioManager.musicSource.clip != audioManager.level)
