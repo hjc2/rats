@@ -55,10 +55,15 @@ public class FlashlightRaycast : MonoBehaviour
             if (hit.collider.CompareTag("Player"))
             {
                 Debug.Log("Player detected in light beam");
-                //Animator animator = Player.GetComponent<animator>();
-                animator.Play("player_caught");
+                // Animator animator = Player.GetComponent<animator>();
+
                 audioManager.PlaySFX(audioManager.squeak);
                 StartCoroutine("Caught");
+
+
+
+                animator.Play("player_walk");
+
                 //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             } 
         } else 

@@ -73,28 +73,28 @@ public class Guard : MonoBehaviour
                                                         targetRotation,
                                                         rotationSpeed * Time.deltaTime);
           if(angle == 90) {
-            Debug.Log("back");
+            // Debug.Log("back");
             anim.SetBool("back", true);
             anim.SetBool("front", false);
             anim.SetBool("left", false);
             anim.SetBool("right", false);
           }
           else if(angle == -90) {
-            Debug.Log("front");
+            // Debug.Log("front");
             anim.SetBool("front", true);
             anim.SetBool("back", false);
             anim.SetBool("left", false);
             anim.SetBool("right", false);
           }
           else if(angle == 0) {
-            Debug.Log("right");
+            // Debug.Log("right");
             anim.SetBool("right", true);
             anim.SetBool("front", false);
             anim.SetBool("back", false);
             anim.SetBool("left", false);
           }
           else {
-            Debug.Log("left");
+            // Debug.Log("left");
             anim.SetBool("left", true);
             anim.SetBool("front", false);
             anim.SetBool("right", false);
