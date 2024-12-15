@@ -48,11 +48,25 @@ public class FlashlightRaycast : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, raycastDistance, obstacleMask);
 
         Debug.DrawRay(transform.position, direction * raycastDistance, Color.white);
+        
 
-        if (hit.collider != null) 
+        GameObject deathObject = null;
+        
+        // GameObject deathObject = GameObject.Find("death");
+        foreach (GameObject obj in Resources.FindObjectsOfTypeAll<GameObject>())
+        {
+            if (obj.name == "death")
+            {
+                deathObject = obj;
+                break;
+            }
+        }
+
+
+        if (hit.collider != null && deathObject != null)
         { 
             //Debug.Log("Raycast hit: " + hit.collider.name);
-            if (hit.collider.CompareTag("Player"))
+            if (hit.collider.CompareTag("Player") && deathObject.activeInHierarchy)
             {
                 Debug.Log("Player detected in light beam");
                 // Animator animator = Player.GetComponent<animator>();
@@ -61,8 +75,9 @@ public class FlashlightRaycast : MonoBehaviour
                 StartCoroutine("Caught");
 
 
+                animator.Play("player_caught");
 
-                animator.Play("player_walk");
+                deathObject.SetActive(false);
 
                 //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             } 
