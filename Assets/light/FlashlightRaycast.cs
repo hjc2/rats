@@ -11,7 +11,7 @@ public class FlashlightRaycast : MonoBehaviour
     private UnityEngine.Rendering.Universal.Light2D light2D;
 
     private AudioManager audioManager;
-    public Animator animator;
+    public GameObject cage;
 
     void Start()
     {
@@ -68,18 +68,9 @@ public class FlashlightRaycast : MonoBehaviour
             //Debug.Log("Raycast hit: " + hit.collider.name);
             if (hit.collider.CompareTag("Player") && deathObject.activeInHierarchy)
             {
-                Debug.Log("Player detected in light beam");
-                // Animator animator = Player.GetComponent<animator>();
-
-                audioManager.PlaySFX(audioManager.squeak);
+                //Debug.Log("Player detected in light beam");
                 StartCoroutine("Caught");
-
-
-                animator.Play("player_caught");
-
                 deathObject.SetActive(false);
-
-                //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             } 
         } else 
         { 
@@ -113,7 +104,10 @@ public class FlashlightRaycast : MonoBehaviour
     }
 
     IEnumerator Caught() {
-        yield return new WaitForSeconds(5);
+        audioManager.PlaySFX(audioManager.squeak);
+        yield return new WaitForSeconds(.25f);
+        cage.SetActive(true);
+        yield return new WaitForSeconds(2);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
