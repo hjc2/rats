@@ -23,7 +23,8 @@ public class PlayerController : MonoBehaviour
     private GameObject result;
     private bool moving = false;
     private Vector2 lastDirection = Vector2.zero;
-
+    Animator anim;
+    int idle = 0;
 
     private void Awake() {
       targetPosition.position = transform.position;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
 
     void Start() {
       resetPosition = transform.position;
+      anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -137,21 +139,27 @@ private void activateTile()
     {
       if (input == new Vector2(0, 1))
       {
+        anim.SetBool("walk_hor", false);
         lastDirection = input;
         return input;
       }
       else if (input == new Vector2(0, -1))
       {
+        anim.SetBool("walk_hor", false);
         lastDirection = input;
         return input;
       }
       else if (input == new Vector2(1, 0))
       {
+        anim.SetBool("walk_hor", true);
+        transform.localScale = new Vector3(-1, 1, 1);
         lastDirection = input;
         return input;
       }
       else if (input == new Vector2(-1, 0))
       {
+        anim.SetBool("walk_hor", true);
+        transform.localScale = new Vector3(1, 1, 1);
         lastDirection = input;
         return input;
       }
@@ -161,6 +169,7 @@ private void activateTile()
         pushing = false;
         if (Mathf.Abs(lastDirection.x) == 1)
         {
+          anim.SetBool("walk_hor", false);
           if (input.y > 0.01f)
           {
             return new Vector2(0, 1);
@@ -178,24 +187,31 @@ private void activateTile()
         {
           if (input.x > 0.01f)
           {
+            anim.SetBool("walk_hor", true);
+            transform.localScale = new Vector3(-1, 1, 1);
             return new Vector2(1, 0);
           }
           else if (input.x < -0.01f)
           {
+            anim.SetBool("walk_hor", true);
+            transform.localScale = new Vector3(1, 1, 1);
             return new Vector2(-1, 0);
           }
-          else 
+          else
           {
+            anim.SetBool("walk_hor", false);
             return Vector2.zero;
           }
         }
         else
         {
+          anim.SetBool("walk_hor", false);
           return Vector2.zero;
         }
       }
       else
       {
+        anim.SetBool("walk_hor", false);
         return Vector2.zero;
       }
     }
