@@ -16,9 +16,11 @@ public class Guard : MonoBehaviour
     private bool isMovingForward = true;
     private Vector2 startPosition;
     private List<Vector3> worldPatrolPoints = new List<Vector3>(); // Absolute locations for patrol
+    Animator anim;
 
     void Start()
     {
+      anim = GetComponent<Animator>();
         // Store the guard's starting position in grid coordinates
         startPosition = new Vector2(
             transform.position.x,
@@ -61,15 +63,43 @@ public class Guard : MonoBehaviour
         // Current orientation of the guard
         float angle = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg;
         
-        // Desired orientation of the guard
-        Quaternion targetRotation = Quaternion.Euler(0, 0, angle + 90);
+        // Desired orientation of the flashlight
+        Quaternion targetRotation = Quaternion.Euler(0, 0, (angle + 270));
 
         // If the guard is not facing the target position
-        if (transform.rotation != targetRotation)
+        if (flashlight.transform.rotation != targetRotation)
         { // rotate, don't move
-            transform.rotation = Quaternion.RotateTowards(transform.rotation,
+            flashlight.transform.rotation = Quaternion.RotateTowards(flashlight.transform.rotation,
                                                         targetRotation,
                                                         rotationSpeed * Time.deltaTime);
+          if(angle == 90) {
+            Debug.Log("back");
+            anim.SetBool("back", true);
+            anim.SetBool("front", false);
+            anim.SetBool("left", false);
+            anim.SetBool("right", false);
+          }
+          else if(angle == -90) {
+            Debug.Log("front");
+            anim.SetBool("front", true);
+            anim.SetBool("back", false);
+            anim.SetBool("left", false);
+            anim.SetBool("right", false);
+          }
+          else if(angle == 0) {
+            Debug.Log("right");
+            anim.SetBool("right", true);
+            anim.SetBool("front", false);
+            anim.SetBool("back", false);
+            anim.SetBool("left", false);
+          }
+          else {
+            Debug.Log("left");
+            anim.SetBool("left", true);
+            anim.SetBool("front", false);
+            anim.SetBool("right", false);
+            anim.SetBool("back", false);
+          }
         } else { // else guard is facing target position, so move, but don't rotate
         transform.position = Vector3.MoveTowards(transform.position,
                                                targetPoint,
