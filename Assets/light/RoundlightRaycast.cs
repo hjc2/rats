@@ -45,20 +45,26 @@ public class RoundlightRaycast : MonoBehaviour
 
         // Get the direction the light beam is facing
         Vector2 direction = player.position - transform.position;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, raycastDistance, obstacleMask);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, raycastDistance, obstacleMask);
 
         Debug.DrawRay(transform.position, direction * raycastDistance, Color.white);
 
-        if (hit.collider != null) 
+        if (hits.Length > 0 && hits[0].collider != null) 
         { 
             // Debug.Log("Raycast hit: " + hit.collider.name);
-            if (hit.collider.CompareTag("Player"))
+            if (hits[0].collider.CompareTag("Player"))
             {
                 Debug.Log("Player detected in round light");
                 audioManager.PlaySFX(audioManager.squeak);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             } 
-        } else 
+            else if ( hits.Length > 1 && hits[0].collider.CompareTag("switch") && hits[1].collider.CompareTag("Player"))
+            {
+                Debug.Log("Player detected in round light");
+                audioManager.PlaySFX(audioManager.squeak);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+        } else
         { 
             // Debug.Log("No collision detected.");
         }
