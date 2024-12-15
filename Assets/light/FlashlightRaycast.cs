@@ -10,8 +10,13 @@ public class FlashlightRaycast : MonoBehaviour
     public LayerMask obstacleMask; // Layer mask for obstacles (e.g., walls)
     private UnityEngine.Rendering.Universal.Light2D light2D;
 
+    private AudioManager audioManager;
+
     void Start()
     {
+        // Find AudioManager
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        
         // Automatically find the player and respawn point in the scene
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
@@ -49,7 +54,7 @@ public class FlashlightRaycast : MonoBehaviour
             if (hit.collider.CompareTag("Player"))
             {
                 Debug.Log("Player detected in light beam");
-                //player.GetComponent<PlayerController>().ResetPlayerPosition();
+                audioManager.PlaySFX(audioManager.squeak);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             } 
         } else 

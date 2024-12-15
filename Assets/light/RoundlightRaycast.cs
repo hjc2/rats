@@ -9,9 +9,14 @@ public class RoundlightRaycast : MonoBehaviour
     public LayerMask obstacleMask; // Layer mask for obstacles (e.g., walls)
     private UnityEngine.Rendering.Universal.Light2D light2D;
 
+    private AudioManager audioManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        // Find AudioManager
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+
         // Automatically find the player and respawn point in the scene
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
@@ -50,7 +55,7 @@ public class RoundlightRaycast : MonoBehaviour
             if (hit.collider.CompareTag("Player"))
             {
                 Debug.Log("Player detected in round light");
-                //player.GetComponent<PlayerController>().ResetPlayerPosition();
+                audioManager.PlaySFX(audioManager.squeak);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             } 
         } else 
