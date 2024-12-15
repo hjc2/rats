@@ -98,6 +98,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 73
+  cage: {fileID: 0}
 --- !u!1 &5204615420816481185
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,9 +348,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patrolOffsets:
   - {x: 0, y: 0}
-  - {x: 1, y: 0}
-  - {x: 1, y: 1}
-  - {x: 0, y: 1}
+  - {x: -13, y: 0}
+  - {x: 0, y: 0}
   moveSpeed: 2
   rotationSpeed: 180
   loopPatrol: 1
