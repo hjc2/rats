@@ -66,11 +66,11 @@ public class PlayerController : MonoBehaviour
          }
 
          if(pushing && moving) {
-          Debug.Log(boxTarget);
+          // Debug.Log(boxTarget);
           boxTarget = new Vector3(targetPosition.position.x + movementDirection.x, targetPosition.position.y + movementDirection.y);
          }
          else if(pulling && moving) {
-          Debug.Log(boxTarget);
+          // Debug.Log(boxTarget);
           boxTarget = new Vector3(targetPosition.position.x - movementDirection.x, targetPosition.position.y - movementDirection.y);
          }
 

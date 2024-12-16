@@ -66,9 +66,23 @@ public class FlashlightRaycast : MonoBehaviour
             }
         }
 
-
+        
         if (hits.Length > 0 && hits[0].collider != null && deathObject != null) 
-        { 
+        {   
+
+            
+            // Debug.Log("Raycast hit: " + hits[0].collider.name);
+            Debug.Log(hits.Length);
+            if(hits.Length == 3){
+                Debug.Log(hits[0].collider.name);
+                Debug.Log(hits[1].collider.name);
+                if(hits[1].collider.name == "player"){
+                    Debug.Log("player found");
+                    audioManager.PlaySFX(audioManager.squeak);
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                }
+                Debug.Log(hits[2].collider.name);
+            }
             // Debug.Log("Raycast hit: " + hit.collider.name);
             if (hits[0].collider.CompareTag("Player") && deathObject.activeInHierarchy )
             {
@@ -91,6 +105,15 @@ public class FlashlightRaycast : MonoBehaviour
                         Debug.Log("Player detected in round light");
                         audioManager.PlaySFX(audioManager.squeak);
                         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                    }
+                }
+
+                if(hits.Length >= 3){
+                    if(hits[2].collider.CompareTag("Player") && deathObject.activeInHierarchy){
+                        Debug.Log("yay!");
+                    }
+                    if(hits[1].collider.CompareTag("Player") && deathObject.activeInHierarchy){
+                        Debug.Log("yay! 2");
                     }
                 }
             }

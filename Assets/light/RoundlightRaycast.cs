@@ -65,6 +65,20 @@ public class RoundlightRaycast : MonoBehaviour
 
         if (hits.Length > 0 && hits[0].collider != null && deathObject != null) 
         { 
+
+            // Debug.Log("Raycast hit: " + hits[0].collider.name);
+            Debug.Log(hits.Length);
+            if(hits.Length == 3){
+                Debug.Log(hits[0].collider.name);
+                Debug.Log(hits[1].collider.name);
+                if(hits[1].collider.name == "player"){
+                    Debug.Log("player found");
+                    audioManager.PlaySFX(audioManager.squeak);
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                }
+                Debug.Log(hits[2].collider.name);
+            }
+
             RaycastHit2D hit = hits[0];
             //Debug.Log("Raycast hit: " + hit.collider.name);
             if (hit.collider.CompareTag("Player") && deathObject.activeInHierarchy)
