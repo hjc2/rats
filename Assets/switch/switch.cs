@@ -5,6 +5,7 @@ using UnityEngine;
 public class SwitchController : MonoBehaviour
 {
     public bool isActivated = true;
+    Animator anim;
     
     [Header("Connected Lights")]
     [Tooltip("Drag and drop light GameObjects here to control them with this switch")]
@@ -21,16 +22,28 @@ public class SwitchController : MonoBehaviour
     {
         // Find AudioManager
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        anim = GetComponent<Animator>();
     }
 
     public void ToggleState()
     {
         if (isTimed) {
+            anim.SetBool("on", true);
             audioManager.PlaySFX(audioManager.button);
             audioManager.PlayTimer(waitTime);
             StartCoroutine(lightTimer());
         } else {
             audioManager.PlaySFX(audioManager.lightSwitch);
+            if(isActivated) {
+              anim.SetBool("on", true);
+              anim.SetBool("off", false);
+              Debug.Log("on");
+            }
+            else if(!isActivated) {
+              anim.SetBool("off", true);
+              anim.SetBool("on", false);
+              Debug.Log("off");
+            }
             isActivated = !isActivated;
             UpdateLights();
         }
@@ -134,5 +147,6 @@ public class SwitchController : MonoBehaviour
         isActivated = !isActivated;
         UpdateLights();
         LightImages();
+        anim.SetBool("off", true);
     }
 }

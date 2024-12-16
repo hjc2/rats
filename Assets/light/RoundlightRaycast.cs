@@ -10,6 +10,7 @@ public class RoundlightRaycast : MonoBehaviour
     private UnityEngine.Rendering.Universal.Light2D light2D;
 
     private AudioManager audioManager;
+    public GameObject cage;
 
     // Start is called before the first frame update
     void Start()
@@ -49,14 +50,28 @@ public class RoundlightRaycast : MonoBehaviour
 
         Debug.DrawRay(transform.position, direction * raycastDistance, Color.white);
 
-        if (hits.Length > 0 && hits[0].collider != null) 
-        { 
-            // Debug.Log("Raycast hit: " + hit.collider.name);
-            if (hits[0].collider.CompareTag("Player"))
+
+        GameObject deathObject = null;
+        
+        // GameObject deathObject = GameObject.Find("death");
+        foreach (GameObject obj in Resources.FindObjectsOfTypeAll<GameObject>())
+        {
+            if (obj.name == "death")
             {
-                Debug.Log("Player detected in round light");
-                audioManager.PlaySFX(audioManager.squeak);
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                deathObject = obj;
+                break;
+            }
+        }
+
+        if (hits.Length > 0 && hits[0].collider != null && deathObject != null) 
+        { 
+            RaycastHit2D hit = hits[0];
+            //Debug.Log("Raycast hit: " + hit.collider.name);
+            if (hit.collider.CompareTag("Player") && deathObject.activeInHierarchy)
+            {
+                //Debug.Log("Player detected in light beam");
+                StartCoroutine("Caught");
+                deathObject.SetActive(false);
             } 
             else if ( hits.Length > 1 && hits[0].collider.CompareTag("switch") && hits[1].collider.CompareTag("Player"))
             {
@@ -64,11 +79,18 @@ public class RoundlightRaycast : MonoBehaviour
                 audioManager.PlaySFX(audioManager.squeak);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
-        } else
-        { 
-            // Debug.Log("No collision detected.");
         }
     }
+
+    IEnumerator Caught() {
+        audioManager.PlaySFX(audioManager.squeak);
+        yield return new WaitForSeconds(.25f);
+        cage.SetActive(true);
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+
 
     void OnTriggerEnter2D(Collider2D other)
     {

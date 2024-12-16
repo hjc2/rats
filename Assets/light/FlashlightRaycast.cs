@@ -11,6 +11,7 @@ public class FlashlightRaycast : MonoBehaviour
     private UnityEngine.Rendering.Universal.Light2D light2D;
 
     private AudioManager audioManager;
+    public GameObject cage;
 
     void Start()
     {
@@ -47,39 +48,53 @@ public class FlashlightRaycast : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, raycastDistance, obstacleMask);
 
         Debug.DrawRay(transform.position, direction * raycastDistance, Color.white);
+        
 
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, raycastDistance, obstacleMask);
 
         Debug.DrawRay(transform.position, direction * raycastDistance, Color.white);
 
-        if (hits.Length > 0 && hits[0].collider != null) 
+        GameObject deathObject = null;
+        
+        // GameObject deathObject = GameObject.Find("death");
+        foreach (GameObject obj in Resources.FindObjectsOfTypeAll<GameObject>())
+        {
+            if (obj.name == "death")
+            {
+                deathObject = obj;
+                break;
+            }
+        }
+
+
+        if (hits.Length > 0 && hits[0].collider != null && deathObject != null) 
         { 
             // Debug.Log("Raycast hit: " + hit.collider.name);
-            if (hits[0].collider.CompareTag("Player"))
+            if (hits[0].collider.CompareTag("Player") && deathObject.activeInHierarchy )
             {
                 Debug.Log("Player detected in round light");
                 audioManager.PlaySFX(audioManager.squeak);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            } 
-            else if (hits.Length > 1 && hits[0].collider.CompareTag("switch") && hits[1].collider.CompareTag("Player"))
-            {
-                Debug.Log("Player detected in round light");
-                audioManager.PlaySFX(audioManager.squeak);
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+
+                if (hit.collider != null && deathObject != null)
+                { 
+                    //Debug.Log("Raycast hit: " + hit.collider.name);
+                    if (hit.collider.CompareTag("Player") && deathObject.activeInHierarchy)
+                    {
+                        //Debug.Log("Player detected in light beam");
+                        StartCoroutine("Caught");
+                        deathObject.SetActive(false);
+                    } 
+                    else if (hits.Length > 1 && hits[0].collider.CompareTag("switch") && hits[1].collider.CompareTag("Player"))
+                    {
+                        Debug.Log("Player detected in round light");
+                        audioManager.PlaySFX(audioManager.squeak);
+                        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                    }
+                }
             }
-        } else
-        { 
-            // Debug.Log("No collision detected.");
         }
-        // if (hit.collider != null && hit.collider.CompareTag("Player"))
-        // {
-        //     Debug.Log("Player detected in light beam");
-        //     player.GetComponent<PlayerController>().ResetPlayerPosition();
-        // }
-        // else
-        // {
-        //     Debug.Log("Player not detected or obstacle in the way");
-        // }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -96,5 +111,13 @@ public class FlashlightRaycast : MonoBehaviour
         {
             light2D.enabled = true;
         }
+    }
+
+    IEnumerator Caught() {
+        audioManager.PlaySFX(audioManager.squeak);
+        yield return new WaitForSeconds(.25f);
+        cage.SetActive(true);
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
