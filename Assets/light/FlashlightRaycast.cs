@@ -63,16 +63,37 @@ public class FlashlightRaycast : MonoBehaviour
         }
 
 
-        if (hit.collider != null && deathObject != null)
+//         if (hit.collider != null && deathObject != null)
+//         { 
+//             //Debug.Log("Raycast hit: " + hit.collider.name);
+//             if (hit.collider.CompareTag("Player") && deathObject.activeInHierarchy)
+//             {
+//                 //Debug.Log("Player detected in light beam");
+//                 StartCoroutine("Caught");
+//                 deathObject.SetActive(false);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, raycastDistance, obstacleMask);
+
+        Debug.DrawRay(transform.position, direction * raycastDistance, Color.white);
+
+        if (hits.Length > 0 && hits[0].collider != null) 
         { 
-            //Debug.Log("Raycast hit: " + hit.collider.name);
-            if (hit.collider.CompareTag("Player") && deathObject.activeInHierarchy)
+            // Debug.Log("Raycast hit: " + hit.collider.name);
+            if (hits[0].collider.CompareTag("Player"))
             {
-                //Debug.Log("Player detected in light beam");
+                Debug.Log("Player detected in round light");
+                audioManager.PlaySFX(audioManager.squeak);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                //Debug.Log("Player detected in light beam"     );
                 StartCoroutine("Caught");
                 deathObject.SetActive(false);
             } 
-        } else 
+            else if (hits.Length > 1 && hits[0].collider.CompareTag("switch") && hits[1].collider.CompareTag("Player"))
+            {
+                Debug.Log("Player detected in round light");
+                audioManager.PlaySFX(audioManager.squeak);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+        } else
         { 
             // Debug.Log("No collision detected.");
         }

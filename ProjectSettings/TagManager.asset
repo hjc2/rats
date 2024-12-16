@@ -11,6 +11,7 @@ TagManager:
   - staticLight
   - Audio
   - Cage
+  - GameManager
   layers:
   - Default
   - TransparentFX

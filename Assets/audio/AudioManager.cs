@@ -7,7 +7,10 @@ public class AudioManager : MonoBehaviour
     public AudioSource musicSource;
     public AudioSource sfxSource;
 
-    public AudioClip background;
+    public AudioClip menu;
+    public AudioClip level;
+    public AudioClip celebrate;
+    public AudioClip credits;
     public AudioClip squeak;
     public AudioClip button;
     public AudioClip lightSwitch;
@@ -29,7 +32,7 @@ public class AudioManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        musicSource.clip = background;
+        musicSource.clip = menu;
         musicSource.Play();
     }
 
