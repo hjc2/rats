@@ -226,6 +226,7 @@ private void activateTile()
 
     void OnToggle(InputValue value) {
       if(value.isPressed){
+        anim.SetTrigger("press");
         Debug.Log("Pressed");
         activateTile();
       }
